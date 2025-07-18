@@ -1,0 +1,223 @@
+import customtkinter as ctk
+import datetime
+from PIL import Image
+import winsound
+import re
+
+import sys
+import os 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import config
+import utils.funcoes as func
+import utils.operacoes as op
+
+class Conferencia_Misturas():
+    def __init__(self):
+        self.cont = 0
+        self.app = 0
+    def abrir(self):
+        #inicialização do app
+        self.app = ctk.CTk()
+        self.app.title(config.APP_TITLE)
+        self.app.geometry(config.APP_SIZE)
+        self.app.iconbitmap(config.APP_ICO)
+        ctk.set_appearance_mode(config.APP_THEME)
+        self.app.configure(fg_color=config.CORES["primaria"])
+
+        #cabeçalho 
+        self.header = ctk.CTkFrame(
+            self.app,
+            height=90,
+            fg_color=config.CORES["primaria"])
+        
+        self.header.pack(side="top", fill="x")
+
+
+        #Logo
+        self.logo_image = ctk.CTkImage(Image.open(config.APP_ICO_PNG), size=(60,60))
+        self.logo_label = ctk.CTkLabel(
+            self.header, 
+            image=self.logo_image, 
+            text=""
+            )
+        self.logo_label.pack(side="left", padx=10)
+
+        #Titulo
+        self.titulo_label = ctk.CTkLabel(
+            self.header, 
+            text="CONFERENCIA MISTURAS", 
+            font=("Arial",20), 
+            text_color=config.CORES["texto"])
+        self.titulo_label.pack(side="left", padx=10)
+        
+        #Espaço par Empurrar restante a direita
+        self.espaco = ctk.CTkLabel(self.header, text="").pack(side="left", expand=True)
+
+        #Relógio
+        self.label_relogio = ctk.CTkLabel(
+            self.header, 
+            text="", 
+            font=("Arial",20), 
+            text_color="black")
+        self.label_relogio.pack(side="right", padx=10)
+        self.atualizar_relogio()
+
+        #Data
+        data_hoje = datetime.datetime.now().strftime("%d/%m/%Y")
+        self.label_data = ctk.CTkLabel(
+            self.header, 
+            text=data_hoje, 
+            font=("Arial",20),
+            text_color=config.CORES["texto"])
+        self.label_data.pack(side="right", padx=10)
+
+
+        #Solicitação de OP
+        self.frame_solicitacao_op = ctk.CTkFrame(self.app)
+        self.frame_solicitacao_op.pack(expand=True, fill=None, anchor="center")
+        
+        self.titulo_solicitacao_op = ctk.CTkLabel(self.frame_solicitacao_op, text="    Solicitação de OP", bg_color=config.CORES["texto"], text_color=config.CORES["fundo"], width=700, height=50, anchor="w", font=("Arial", 20))
+        self.titulo_solicitacao_op.pack(side="top")
+
+        self.mensagem_solicitacao_op = ctk.CTkLabel(self.frame_solicitacao_op, text="  Informe a OP que deseja conferir: ", anchor="w", justify="left", font=("Arial", 18))
+        self.mensagem_solicitacao_op.pack(anchor="w", pady=(20 , 5))
+
+        self.entry_solicitacao_op = ctk.CTkEntry(self.frame_solicitacao_op, placeholder_text="Ordem de Produção", height=40)
+        self.entry_solicitacao_op.pack(fill="x", expand=True, padx=10)
+        
+        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"])
+        self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
+        
+        self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_misturar)
+        self.botao_continuar_solicitacao_op.pack(side="right", padx=10, pady=20)
+        
+        self.entry_solicitacao_op.bind("<Return>", command=self.conferir_misturar)
+        func.focar_campo(self.app, self.entry_solicitacao_op)
+
+        
+        self.app.mainloop()
+
+
+    def conferir_misturar(self, event=None):
+        self.entrada_op = self.entry_solicitacao_op.get().strip()
+
+        #acha nome de arquivo
+        self.nome_arquivo = op.achar_arquivo(self.entrada_op)
+
+        
+
+        if self.nome_arquivo == "N/A" or self.entrada_op == "":
+            self.erro_solicitacao_op = ctk.CTkLabel(self.frame_solicitacao_op, text="OP não encontrada na programação", bg_color=config.CORES["erro"], text_color=config.CORES["texto"], height=40, font=("Arial", 20, "bold"))
+            self.erro_solicitacao_op.pack(padx=10, pady=20, side="bottom", fill="x", expand=True)
+            self.app.after(1500,self.erro_solicitacao_op.pack_forget)
+            winsound.MessageBeep(winsound.MB_ICONHAND)
+            return
+
+        else:
+            #otbtem df com dados
+            self.material = op.misturas_normais(self.nome_arquivo)
+            
+            #Fecha frame de solicitação 
+            self.frame_solicitacao_op.pack_forget()
+
+            #cria novo frame para conferir
+            self.frame_conteiner = ctk.CTkFrame(self.app, fg_color=config.CORES["primaria"])
+            self.frame_conteiner.pack(fill="both", expand=True) 
+
+            #CONFIGS DO FRAME
+            self.frame_conteiner.grid_rowconfigure(0, weight=1)   
+            self.frame_conteiner.grid_rowconfigure(1, weight=1)  
+            self.frame_conteiner.grid_rowconfigure(2, weight=1)   
+            self.frame_conteiner.grid_rowconfigure(3, weight=1)   
+            self.frame_conteiner.grid_rowconfigure(4, weight=1)   
+
+            self.frame_conteiner.grid_columnconfigure(0, weight=0)  
+            self.frame_conteiner.grid_columnconfigure(1, weight=1)
+            self.frame_conteiner.grid_columnconfigure(2, weight=1) 
+            self.frame_conteiner.grid_columnconfigure(3, weight=1) 
+            self.frame_conteiner.grid_columnconfigure(4, weight=1) 
+
+
+            #cria caixa com infomacao da op
+            self.frame_op = ctk.CTkFrame(self.frame_conteiner, border_color=config.CORES["texto"], border_width=2)
+            self.frame_op.grid(row=0, column=0, sticky="wn", padx=5, pady=5)
+
+            #op dentro da caixa de informação
+            self.label_op_caixa = ctk.CTkLabel(self.frame_op, text=f"OP: {self.entrada_op}", height=70, width=300, font=("Arial",30,"bold"), text_color=config.CORES["secundaria"])
+            self.label_op_caixa.pack(pady=10, padx=10)
+
+            #a confirmar frame
+            self.frame_acofirmar = ctk.CTkFrame(self.frame_conteiner, border_color=config.CORES["texto"], border_width=2, fg_color=config.CORES["borda"])
+            self.frame_acofirmar.grid(row=1, column=2, padx=5, pady=(0, 5), sticky="n")
+
+            self.frame_acofirmar.grid_rowconfigure(0, weight=1)
+            self.frame_acofirmar.grid_rowconfigure(1, weight=1)
+            self.frame_acofirmar.grid_rowconfigure(2, weight=1)
+
+            #texto titulo frame a confirmar
+            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Misturas", height=100, width=400, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
+            self.label_titulo_frame_aconfirmar.grid(row=0, column=0, padx=1, pady=1)
+
+            #a confirmar label texto
+            self.label_confirmar = ctk.CTkLabel(self.frame_acofirmar, text=self.material[self.cont], height=100, width=400, font=("Arial", 60, "bold"), text_color=config.CORES["texto"])
+            self.label_confirmar.grid(row=1, column=0, padx=10, pady=10)
+
+            #a confirmar entry 
+            self.entry_aconfirmar = ctk.CTkEntry(self.frame_acofirmar, height=100, font=("Arial", 30))
+            self.entry_aconfirmar.grid(sticky="we", row=2, column=0, pady=20, padx=20)
+            func.focar_campo(self.app, self.entry_aconfirmar)
+
+            self.entry_aconfirmar.bind("<Return>", lambda event: self.verificar_mistura())
+
+            
+                
+
+
+    def mostrar_mistura_atual(self):
+        if self.cont < len(self.material):
+            mistura  = self.material[self.cont]
+            self.label_confirmar.configure(text=mistura)
+        else:
+            self.label_confirmar.configure(text="Fim das misturas")
+            self.entry_aconfirmar.configure(state="disabled")
+
+    def verificar_mistura(self, event=None):
+        if self.cont >= len(self.material):
+            return
+            
+        entrada = self.entry_aconfirmar.get().strip()
+        mistura = self.material[self.cont]
+        
+        if mistura in entrada:
+            print("confirmada")
+            self.cont += 1
+            self.mostrar_mistura_atual()
+
+            self.messagem_sucesso = ctk.CTkLabel(self.frame_conteiner, text="CÓDIGO CONFIRMADA", width=300, height=80, font=("Arial", 20, "bold"), fg_color=config.CORES["sucesso"])
+            self.messagem_sucesso.grid(row=4, column=2, padx=10, pady=10)
+            winsound.MessageBeep(winsound.MB_OK)
+
+
+        else:
+            print("Mistura errada")
+            print(self.cont)
+
+            self.messagem_erro = ctk.CTkLabel(self.frame_conteiner, text="CÓDIGO NÃO CONFERE", width=300, height=80, font=("Arial", 20, "bold"), fg_color=config.CORES["erro"])
+            self.messagem_erro.grid(row=4, column=2, padx=10, pady=10)
+            winsound.MessageBeep(winsound.MB_ICONHAND)
+
+        self.entry_aconfirmar.delete(0, "end")
+
+    def atualizar_relogio(self):
+        agora = datetime.datetime.now().strftime("%H:%M:%S")
+        self.label_relogio.configure(text=agora)
+        self.app.after(1000, self.atualizar_relogio)
+
+    def fechar(self):
+        self.app.destroy()
+
+    
+
+if __name__ == "__main__":
+    conferencia_misturas = Conferencia_Misturas()
+    conferencia_misturas.abrir()
