@@ -8,18 +8,19 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
 
 class Menu_Conferencia():
-    def __init__(self, app, callback_troca_tela_misturas_normais):
+    def __init__(self, app, callback_troca_tela_misturas_normais, voltar):
         self.app = app
         self.callback_troca_tela_misturas_normais = callback_troca_tela_misturas_normais
-        self.frame = ctk.CTkFrame(self.app)
+        self.frame = ctk.CTkFrame(self.app, fg_color=config.CORES["primaria"],corner_radius=False)
+        self.voltar = voltar
         
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
             self.frame,
             height=90,
-            fg_color=config.CORES["primaria"])
-        
+            fg_color=config.CORES["primaria"],
+            corner_radius=False)
         self.header.pack(side="top", fill="x")
 
 
@@ -65,7 +66,8 @@ class Menu_Conferencia():
         self.area_botoes = ctk.CTkFrame(
             self.frame,
             height=100,
-            fg_color=config.CORES["primaria"]
+            fg_color=config.CORES["primaria"],
+            corner_radius=False
         )
         self.area_botoes.pack(side="top", fill="both", expand=True)
 
@@ -145,9 +147,21 @@ class Menu_Conferencia():
             anchor="w",
             corner_radius=0)
         self.botao_conferir_fines_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
+
+
+
+
         #Rodapé
-        self.footer = ctk.CTkFrame(self.frame, height=70, fg_color=config.CORES["primaria"])
-        self.footer.pack(side="bottom", fill="x")
+        self.footer = ctk.CTkFrame(self.frame, height=70, fg_color=config.CORES["primaria"], corner_radius=False)
+        self.footer.pack(side="bottom", fill="x", padx=20)
+
+        #botão voltar
+        self.botao_voltar = ctk.CTkButton(self.footer, height=40, width=100, text="VOLTAR", fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], font=("Arial", 20, "normal"), command=voltar)
+        self.botao_voltar.pack(side="left")
+
+        #Entry rodapé
+        self.entry_OPT = ctk.CTkEntry(self.footer,width=100)
+        self.entry_OPT.pack(side="right" )
 
         #Texto entry
         self.label_OPT = ctk.CTkLabel(
@@ -155,17 +169,11 @@ class Menu_Conferencia():
             text="OPT: ",
             font=("Arial",20)
         )
-        self.label_OPT.pack(side="left", pady=20)
-
-        #Entry rodapé
-        self.entry_OPT = ctk.CTkEntry(
-            self.footer,
-            width=100
-        )
-        self.entry_OPT.pack(side="left" )
+        self.label_OPT.pack(side="right", pady=20, padx=10)
 
         #funcional
-        self.entry_OPT.bind("<Return>", self.ir_para_misturas_normais)
+        self.entry_OPT.bind("<Return>", command=self.ir_para_misturas_normais)
+        self.app.bind("<Escape>", self.voltar)
           
 
     def atualizar_relogio(self):
@@ -173,9 +181,11 @@ class Menu_Conferencia():
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
 
-    def ir_para_misturas_normais(self):
+    def ir_para_misturas_normais(self, event=None):
         self.callback_troca_tela_misturas_normais()
 
+    def voltar(self, evente=None):
+        self.voltar()
 if __name__ == "__main__":
     menu_conferencia = Menu_Conferencia()
     menu_conferencia.abrir()

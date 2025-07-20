@@ -15,13 +15,14 @@ class Tela_Inicial():
     def __init__(self, app, callback_troca_tela_menu_misturas):
         self.app = app
         self.callback_troca_tela_menu_misturas = callback_troca_tela_menu_misturas
-        self.frame = ctk.CTkFrame(self.app)
+        self.frame = ctk.CTkFrame(self.app, corner_radius=False)
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
            self.frame,
             height=90,
-            fg_color=config.CORES["primaria"])
+            fg_color=config.CORES["primaria"], 
+            corner_radius=False)
         
         self.header.pack(side="top", fill="x")
 
@@ -70,7 +71,8 @@ class Tela_Inicial():
         self.area_botoes = ctk.CTkFrame(
            self.frame,
             height=100,
-            fg_color=config.CORES["primaria"]
+            fg_color=config.CORES["primaria"], 
+            corner_radius=False
         )
         self.area_botoes.pack(side="top", fill="both", expand=True)
 
@@ -126,7 +128,7 @@ class Tela_Inicial():
         self.botao_relatório_btn.pack(fill="both", expand=True)
 
         #Rodapé
-        self.footer = ctk.CTkFrame(self.frame, height=70, fg_color=config.CORES["primaria"])
+        self.footer = ctk.CTkFrame(self.frame, height=70, fg_color=config.CORES["primaria"], corner_radius=False)
         self.footer.pack(side="bottom", fill="x")
 
         #Texto entry

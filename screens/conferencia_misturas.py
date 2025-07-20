@@ -27,12 +27,12 @@ class Confirmado():
                  self.frame_lista_direita._parent_canvas.yview_moveto(1.0)
 
 class Conferencia_Misturas():
-    def __init__(self, app, callback_menu_conferencia_PMD):
+    def __init__(self, app, voltar):
         self.app = app
         self.frame = ctk.CTkFrame(self.app)
         self.cont = 0
         self.total = 0
-        self.voltar = callback_menu_conferencia_PMD
+        self.voltar = voltar
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
@@ -95,7 +95,7 @@ class Conferencia_Misturas():
         self.entry_solicitacao_op = ctk.CTkEntry(self.frame_solicitacao_op, placeholder_text="Ordem de Produção", height=40)
         self.entry_solicitacao_op.pack(fill="x", expand=True, padx=10)
         
-        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.voltar_menu)
+        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.voltar)
         self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
         
         self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_misturar)
@@ -290,7 +290,7 @@ class Conferencia_Misturas():
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
 
-    def voltar_menu(self):
+    def voltar(self):
         self.voltar()
     
 
