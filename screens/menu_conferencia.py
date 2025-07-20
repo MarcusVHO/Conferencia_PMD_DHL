@@ -8,22 +8,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
 
 class Menu_Conferencia():
-    def __init__(self):
-        self.app = None
-        self.opcao = None
-    
-    def abrir(self):
-        #inicialização do app
-        self.app = ctk.CTk()
-        self.app.title(config.APP_TITLE)
-        self.app.geometry(config.APP_SIZE)
-        self.app.iconbitmap(config.APP_ICO)
-        ctk.set_appearance_mode(config.APP_THEME)
-        self.app.configure(fg_color=config.CORES["primaria"])
+    def __init__(self, app, callback_troca_tela_misturas_normais):
+        self.app = app
+        self.callback_troca_tela_misturas_normais = callback_troca_tela_misturas_normais
+        self.frame = ctk.CTkFrame(self.app)
+        
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
-            self.app,
+            self.frame,
             height=90,
             fg_color=config.CORES["primaria"])
         
@@ -70,7 +63,7 @@ class Menu_Conferencia():
 
         #Area de Botões
         self.area_botoes = ctk.CTkFrame(
-            self.app,
+            self.frame,
             height=100,
             fg_color=config.CORES["primaria"]
         )
@@ -99,7 +92,7 @@ class Menu_Conferencia():
             font=("Arial", 20),
             text_color=config.CORES["texto"],
             anchor="w",
-            command=lambda: self.enviar_informacao("1"),
+            command=self.ir_para_misturas_normais,
             corner_radius=0)
         self.botao_conferir_misturas_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
@@ -125,7 +118,6 @@ class Menu_Conferencia():
             font=("Arial", 20),
             text_color=config.CORES["texto"],
             anchor="w",
-            command=lambda: self.enviar_informacao("2"),
             corner_radius=0)
         self.botao_conferir_sts_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
@@ -151,11 +143,10 @@ class Menu_Conferencia():
             font=("Arial", 20),
             text_color=config.CORES["texto"],
             anchor="w",
-            command=lambda: self.enviar_informacao("3"),
             corner_radius=0)
         self.botao_conferir_fines_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
         #Rodapé
-        self.footer = ctk.CTkFrame(self.app, height=70, fg_color=config.CORES["primaria"])
+        self.footer = ctk.CTkFrame(self.frame, height=70, fg_color=config.CORES["primaria"])
         self.footer.pack(side="bottom", fill="x")
 
         #Texto entry
@@ -174,38 +165,16 @@ class Menu_Conferencia():
         self.entry_OPT.pack(side="left" )
 
         #funcional
-        self.app.bind("<Return>", self.pegar_informação)
-        
-
-        self.app.mainloop()
-
-
-
-    def pegar_informação(self, event=None):
-        self.opcao = self.entry_OPT.get().strip()
-        self.entry_OPT.delete(0, "end")
-
-        if self.opcao in ["1", "2", "3"]:
-            self.app.quit()
-            self.fechar()
-        else:
-             winsound.MessageBeep(winsound.MB_ICONHAND)
-             self.opcao = None
-
-    def enviar_informacao(self,inform, event=None):
-        self.opcao = inform
-        self.app.quit()
-        self.fechar()
-       
+        self.entry_OPT.bind("<Return>", self.ir_para_misturas_normais)
+          
 
     def atualizar_relogio(self):
         agora = datetime.datetime.now().strftime("%H:%M:%S")
         self.label_relogio.configure(text=agora)
-        self.app.after(1000, self.atualizar_relogio)
+        self.frame.after(1000, self.atualizar_relogio)
 
-    def fechar(self):
-        self.app.destroy()
-
+    def ir_para_misturas_normais(self):
+        self.callback_troca_tela_misturas_normais()
 
 if __name__ == "__main__":
     menu_conferencia = Menu_Conferencia()

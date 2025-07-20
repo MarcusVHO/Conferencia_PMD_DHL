@@ -1,15 +1,43 @@
 from screens.tela_inicial import Tela_Inicial
 from screens.menu_conferencia import Menu_Conferencia
 from screens.conferencia_misturas import Conferencia_Misturas
+import customtkinter as ctk
+import config
 
-tela_inicial = Tela_Inicial()
-menu_conferencia = Menu_Conferencia()
-conferencia_misturas = Conferencia_Misturas()
+class Sistema_DHL(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title(config.APP_TITLE)
+        self.geometry(config.APP_SIZE)
+        self.conteiner_frame = None
+        self.mostrar_tela_inicial()
+        self.iconbitmap(config.APP_ICO)
 
-tela_inicial.abrir()
+    def limpar(self):
+        if self.conteiner_frame is not None:
+            self.conteiner_frame.pack_forget()
+            self.conteiner_frame.destroy()
+            self.conteiner_frame = None
 
-# navegador principal
-if tela_inicial.opcao == "conferencia":
-    menu_conferencia.abrir()
-    if menu_conferencia.opcao == "1":
-        conferencia_misturas.abrir()
+    def mostrar_tela_inicial(self):
+        self.limpar()
+        self.tela_inicial = Tela_Inicial(self, self.mostrar_menu_conferencia)
+        self.conteiner_frame = self.tela_inicial.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
+
+    def mostrar_menu_conferencia(self):
+        self.limpar()
+        self.menu_conferncia = Menu_Conferencia(self, self.mostrar_conferencia_misturas)
+        self.conteiner_frame = self.menu_conferncia.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
+
+    def mostrar_conferencia_misturas(self):
+        self.limpar()
+        self.conferencia_misturas = Conferencia_Misturas(self)
+        self.conteiner_frame = self.conferencia_misturas.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
+
+
+if __name__ == "__main__":
+    app = Sistema_DHL()
+    app.mainloop()

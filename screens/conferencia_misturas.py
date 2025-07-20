@@ -11,22 +11,30 @@ import config
 import utils.funcoes as func
 import utils.operacoes as op
 
+class Confirmado():
+            def __init__(self,frame, codigo, cor):
+                    super().__init__()
+                    self.codigo = codigo
+                    self.cor = cor
+                    self.frame_lista_direita = frame
+                    self.inserir()
+            def inserir(self):
+                    self.codigo_confirmado = ctk.CTkLabel(self.frame_lista_direita, text=self.codigo, fg_color=config.CORES["borda"], height=40, corner_radius=20, font=("Arial", 18, "bold"))
+                    self.codigo_confirmado.pack(fill="x", padx=5, pady=5)
+
+                    self.frame_lista_direita.after(10, self.rolar_pra_baixo)
+            def rolar_pra_baixo(self):
+                 self.frame_lista_direita._parent_canvas.yview_moveto(1.0)
+
 class Conferencia_Misturas():
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
+        self.frame = ctk.CTkFrame(self.app)
         self.cont = 0
-        self.app = 0
-    def abrir(self):
-        #inicialização do app
-        self.app = ctk.CTk()
-        self.app.title(config.APP_TITLE)
-        self.app.geometry(config.APP_SIZE)
-        self.app.iconbitmap(config.APP_ICO)
-        ctk.set_appearance_mode(config.APP_THEME)
-        self.app.configure(fg_color=config.CORES["primaria"])
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
-            self.app,
+            self.frame,
             height=90,
             fg_color=config.CORES["primaria"])
         
@@ -73,7 +81,7 @@ class Conferencia_Misturas():
 
 
         #Solicitação de OP
-        self.frame_solicitacao_op = ctk.CTkFrame(self.app)
+        self.frame_solicitacao_op = ctk.CTkFrame(self.frame)
         self.frame_solicitacao_op.pack(expand=True, fill=None, anchor="center")
         
         self.titulo_solicitacao_op = ctk.CTkLabel(self.frame_solicitacao_op, text="    Solicitação de OP", bg_color=config.CORES["texto"], text_color=config.CORES["fundo"], width=700, height=50, anchor="w", font=("Arial", 20))
@@ -92,10 +100,9 @@ class Conferencia_Misturas():
         self.botao_continuar_solicitacao_op.pack(side="right", padx=10, pady=20)
         
         self.entry_solicitacao_op.bind("<Return>", command=self.conferir_misturar)
-        func.focar_campo(self.app, self.entry_solicitacao_op)
+        func.focar_campo(self.frame, self.entry_solicitacao_op)
 
         
-        self.app.mainloop()
 
 
     def conferir_misturar(self, event=None):
@@ -109,7 +116,7 @@ class Conferencia_Misturas():
         if self.nome_arquivo == "N/A" or self.entrada_op == "":
             self.erro_solicitacao_op = ctk.CTkLabel(self.frame_solicitacao_op, text="OP não encontrada na programação", bg_color=config.CORES["erro"], text_color=config.CORES["texto"], height=40, font=("Arial", 20, "bold"))
             self.erro_solicitacao_op.pack(padx=10, pady=20, side="bottom", fill="x", expand=True)
-            self.app.after(1500,self.erro_solicitacao_op.pack_forget)
+            self.frame.after(1500,self.erro_solicitacao_op.pack_forget)
             winsound.MessageBeep(winsound.MB_ICONHAND)
             return
 
@@ -121,7 +128,7 @@ class Conferencia_Misturas():
             self.frame_solicitacao_op.pack_forget()
 
             #cria novo frame para conferir
-            self.frame_conteiner = ctk.CTkFrame(self.app, fg_color=config.CORES["primaria"])
+            self.frame_conteiner = ctk.CTkFrame(self.frame, fg_color=config.CORES["primaria"])
             self.frame_conteiner.pack(fill="both", expand=True) 
 
             #CONFIGS DO FRAME
@@ -137,7 +144,7 @@ class Conferencia_Misturas():
             self.frame_conteiner.grid_columnconfigure(3, weight=1) 
             self.frame_conteiner.grid_columnconfigure(4, weight=1) 
 
-
+            # --------------- Frame Esquerdo ----------------------
             #cria caixa com infomacao da op
             self.frame_op = ctk.CTkFrame(self.frame_conteiner, border_color=config.CORES["texto"], border_width=2)
             self.frame_op.grid(row=0, column=0, sticky="wn", padx=5, pady=5)
@@ -146,6 +153,9 @@ class Conferencia_Misturas():
             self.label_op_caixa = ctk.CTkLabel(self.frame_op, text=f"OP: {self.entrada_op}", height=70, width=300, font=("Arial",30,"bold"), text_color=config.CORES["secundaria"])
             self.label_op_caixa.pack(pady=10, padx=10)
 
+
+
+            # ---------------- Frame do Centro --------------------
             #a confirmar frame
             self.frame_acofirmar = ctk.CTkFrame(self.frame_conteiner, border_color=config.CORES["texto"], border_width=2, fg_color=config.CORES["borda"])
             self.frame_acofirmar.grid(row=1, column=2, padx=5, pady=(0, 5), sticky="n")
@@ -165,11 +175,28 @@ class Conferencia_Misturas():
             #a confirmar entry 
             self.entry_aconfirmar = ctk.CTkEntry(self.frame_acofirmar, height=100, font=("Arial", 30))
             self.entry_aconfirmar.grid(sticky="we", row=2, column=0, pady=20, padx=20)
-            func.focar_campo(self.app, self.entry_aconfirmar)
+            func.focar_campo(self.frame, self.entry_aconfirmar)
 
             self.entry_aconfirmar.bind("<Return>", lambda event: self.verificar_mistura())
 
-            
+
+
+            # --------------- Frame Direito ---------------------
+            #frame lista historico
+            self.frame_lista_direita = ctk.CTkScrollableFrame(
+                 self.frame_conteiner, width=200, 
+                 height=500, 
+                 corner_radius=False, 
+                 border_width=2, 
+                 border_color=config.CORES["texto"], 
+                 label_text="CONFIRMADOS", 
+                 label_font=("Arial", 20, "bold"), 
+                 label_fg_color=config.CORES["texto"],
+                 label_text_color=config.CORES["fundo"]
+                 )
+            self.frame_lista_direita.grid(row=0, column=4, rowspan=3, padx=5, pady=1)
+
+
                 
 
 
@@ -190,6 +217,7 @@ class Conferencia_Misturas():
         
         if mistura in entrada:
             print("confirmada")
+            confirmado = Confirmado(self.frame_lista_direita, mistura, config.CORES["borda"],)
             self.cont += 1
             self.mostrar_mistura_atual()
 
@@ -211,13 +239,18 @@ class Conferencia_Misturas():
     def atualizar_relogio(self):
         agora = datetime.datetime.now().strftime("%H:%M:%S")
         self.label_relogio.configure(text=agora)
-        self.app.after(1000, self.atualizar_relogio)
-
-    def fechar(self):
-        self.app.destroy()
+        self.frame.after(1000, self.atualizar_relogio)
 
     
 
 if __name__ == "__main__":
-    conferencia_misturas = Conferencia_Misturas()
-    conferencia_misturas.abrir()
+        app = ctk.CTk()
+        app.title(config.APP_TITLE)
+        app.geometry(config.APP_SIZE)
+        app.iconbitmap(config.APP_ICO)
+        frame = None
+
+        conferir = Conferencia_Misturas(app)
+        frame = conferir.frame
+        frame.pack(fill="both", expand=True)
+        app.mainloop()

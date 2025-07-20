@@ -12,22 +12,14 @@ import winsound
 
 
 class Tela_Inicial():
-    def __init__(self):
-        self.app = None
-        self.opcao = None
-
-    def abrir(self):
-        #inicialização do app
-        self.app = ctk.CTk()
-        self.app.title(config.APP_TITLE)
-        self.app.geometry(config.APP_SIZE)
-        self.app.iconbitmap(config.APP_ICO)
-        ctk.set_appearance_mode(config.APP_THEME)
-        self.app.configure(fg_color=config.CORES["primaria"])
+    def __init__(self, app, callback_troca_tela_menu_misturas):
+        self.app = app
+        self.callback_troca_tela_menu_misturas = callback_troca_tela_menu_misturas
+        self.frame = ctk.CTkFrame(self.app)
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
-            self.app,
+           self.frame,
             height=90,
             fg_color=config.CORES["primaria"])
         
@@ -76,7 +68,7 @@ class Tela_Inicial():
 
         #Area de Botões
         self.area_botoes = ctk.CTkFrame(
-            self.app,
+           self.frame,
             height=100,
             fg_color=config.CORES["primaria"]
         )
@@ -104,7 +96,7 @@ class Tela_Inicial():
             hover_color=config.CORES["borda"],
             font=("Arial", 20),
             text_color=config.CORES["texto"],
-            command=lambda: self.enviar_informacao("conferencia"),
+            command= self.ir_para_menu_misturas,
             corner_radius=0)
         self.botao_conferencia_btn.pack(fill="both", expand=True)
 
@@ -129,13 +121,12 @@ class Tela_Inicial():
             fg_color=config.CORES["fundo"], 
             hover_color=config.CORES["borda"],
             font=("Arial", 20),
-            text_color=config.CORES["texto"],
-            command=lambda: self.enviar_informacao("relatorio"),
+            text_color=config.CORES["texto"]
             )
         self.botao_relatório_btn.pack(fill="both", expand=True)
 
         #Rodapé
-        self.footer = ctk.CTkFrame(self.app, height=70, fg_color=config.CORES["primaria"])
+        self.footer = ctk.CTkFrame(self.frame, height=70, fg_color=config.CORES["primaria"])
         self.footer.pack(side="bottom", fill="x")
 
         #Texto entry
@@ -154,36 +145,17 @@ class Tela_Inicial():
         self.entry_OPT.pack(side="left" )
 
         #Funcional
-        self.app.bind("<Return>", self.pegar_informação)
+        self.entry_OPT.bind("<Return>",self.ir_para_menu_misturas)
         
-        self.app.mainloop()
-
+    def ir_para_menu_misturas(self, event=None):
+        self.callback_troca_tela_menu_misturas()
 
 
     def atualizar_relogio(self):
         agora = datetime.datetime.now().strftime("%H:%M:%S")
         self.label_relogio.configure(text=agora)
-        self.app.after(1000, self.atualizar_relogio)
+        self.frame.after(1000, self.atualizar_relogio)
 
-    def pegar_informação(self, event=None):
-        self.opcao = self.entry_OPT.get().strip()
-        self.entry_OPT.delete(0, "end")
 
-        if self.opcao in ["conferencia", "relatorio"]:
-            self.app.quit()
-            self.fechar() 
-        else:
-            winsound.MessageBeep(winsound.MB_ICONHAND)
 
-    def enviar_informacao(self,inform, event=None):
-        self.opcao = inform
-        self.app.quit()
-        self.fechar() 
 
-    def fechar(self):
-        self.app.destroy()
-
-if __name__ == '__main__':
-    tela_inicial = Tela_Inicial()
-    tela_inicial.abrir()
-    print(tela_inicial.opcao)

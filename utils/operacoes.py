@@ -1,10 +1,9 @@
 from pathlib import Path
 import sys
 import os 
-import tabula
-import tabula.io
 import pandas as pd
 import re
+import pdfplumber
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
@@ -25,32 +24,27 @@ def achar_arquivo(op):
     return "N/A"
 
 def extrair_dados(arquivo):
-    caminho = str(Path(config.APP_PDF) / "Misturas" / arquivo)
-
-    # Extrai todas as tabelas do PDF
-    tabelas = tabula.io.read_pdf(
-        caminho,
-        pages="all",
-        multiple_tables=True,
-        lattice=True,
-        guess=False
-    )
-
-    # Lista para armazenar DataFrames válidos
-    tabelas_com_material = []
-
-    for tabela in tabelas:
-        if tabela is not None and "Material" in tabela.columns:
-            tabela = tabela.dropna(how="all")  # remove linhas totalmente vazias
-            tabelas_com_material.append(tabela)
-
-    if not tabelas_com_material:
-        print("Nenhuma tabela com coluna 'Material' encontrada.")
+    caminho = config.APP_PDF / "Misturas" / arquivo
+    dataframes = []
+    if not Path(caminho).exists():
+        print(f"Arquivo não encontrado: {arquivo}")
         return pd.DataFrame()
+    with pdfplumber.open(caminho) as pdf:
+        for i, page in enumerate(pdf.pages):
+            tables = page.extract_tables()
+            for table in tables:
+                if table:
+                    header = table[0]
+                    if any("Material" in str(col) for col in header):
+                        df = pd.DataFrame(table[1:], columns=header)
+                        dataframes.append(df)
+    if dataframes:
+        df_geral=pd.concat(dataframes, ignore_index=True)
+    
+    else:
+        df_geral=pd.DataFrame()
 
-    # Concatena todas as tabelas válidas em um único DataFrame
-    df_materiais = pd.concat(tabelas_com_material, ignore_index=True)
-    return df_materiais
+    return df_geral
 
 
 
@@ -71,6 +65,3 @@ def misturas_normais(arquivo):
             return materiais_mistura
             
 
-        
-
-# Chamada

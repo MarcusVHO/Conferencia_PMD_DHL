@@ -3,6 +3,13 @@ import os
 import sys
 
 
+# Funcoes de caminhos relativos
+def diretorio_arquivo_exe():
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+    else:
+        return Path(__file__).resolve().parent
+
 def resource_path(relative_path):
     """Pega o caminho absoluto, considerando o bundle do PyInstaller"""
     try:
@@ -24,7 +31,7 @@ APP_THEME = "light"
 BASE_DIR = Path(__file__).resolve().parent
 APP_ICO = resource_path("assets/iconeDHL.ico")
 APP_ICO_PNG = resource_path("assets/iconeDHL.png")
-APP_PDF = Path(resource_path("PDF"))
+APP_PDF = diretorio_arquivo_exe() / "PDF"
 APP_FONTE = ("Arial", 20)
 
 #Cores do app
