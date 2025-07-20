@@ -27,10 +27,12 @@ class Confirmado():
                  self.frame_lista_direita._parent_canvas.yview_moveto(1.0)
 
 class Conferencia_Misturas():
-    def __init__(self, app):
+    def __init__(self, app, callback_menu_conferencia_PMD):
         self.app = app
         self.frame = ctk.CTkFrame(self.app)
         self.cont = 0
+        self.total = 0
+        self.voltar = callback_menu_conferencia_PMD
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
@@ -93,7 +95,7 @@ class Conferencia_Misturas():
         self.entry_solicitacao_op = ctk.CTkEntry(self.frame_solicitacao_op, placeholder_text="Ordem de Produção", height=40)
         self.entry_solicitacao_op.pack(fill="x", expand=True, padx=10)
         
-        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"])
+        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.voltar_menu)
         self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
         
         self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_misturar)
@@ -123,6 +125,7 @@ class Conferencia_Misturas():
         else:
             #otbtem df com dados
             self.material = op.misturas_normais(self.nome_arquivo)
+            self.total = len(self.material)
             
             #Fecha frame de solicitação 
             self.frame_solicitacao_op.pack_forget()
@@ -146,14 +149,33 @@ class Conferencia_Misturas():
 
             # --------------- Frame Esquerdo ----------------------
             #cria caixa com infomacao da op
-            self.frame_op = ctk.CTkFrame(self.frame_conteiner, border_color=config.CORES["texto"], border_width=2)
-            self.frame_op.grid(row=0, column=0, sticky="wn", padx=5, pady=5)
+            self.frame_informacoes_mistura = ctk.CTkFrame(self.frame_conteiner, border_color=config.CORES["texto"], border_width=2, corner_radius=False, fg_color=config.CORES["fundo"])
+            self.frame_informacoes_mistura.grid(row=0, column=0, rowspan=4, sticky="wn", padx=5, pady=5)
 
+            #Titulo Informações Mistura
+            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="MISTURA", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
+            self.label_titulo_informacoes_mistura.pack(fill="x")
+            
             #op dentro da caixa de informação
-            self.label_op_caixa = ctk.CTkLabel(self.frame_op, text=f"OP: {self.entrada_op}", height=70, width=300, font=("Arial",30,"bold"), text_color=config.CORES["secundaria"])
+            self.label_op_caixa = ctk.CTkLabel(self.frame_informacoes_mistura, text=f"OP: {self.entrada_op}", height=70, width=300, font=("Arial",30,"bold"), text_color=config.CORES["texto"])
             self.label_op_caixa.pack(pady=10, padx=10)
 
+            #Titulo Informações Quantidade
+            self.label_titulo_informacoes_quantidade = ctk.CTkLabel(self.frame_informacoes_mistura, text="ITENS CONFIRMADOS", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
+            self.label_titulo_informacoes_quantidade.pack(fill="x")
 
+            #quantidade total confirmada
+            self.label_quantidade_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text=f"{self.cont}/{self.total}", height=70, width=300, font=("Arial",30,"bold"), text_color=config.CORES["texto"])
+            self.label_quantidade_mistura.pack(pady=10, padx=10)
+
+            #Titulo Informações barra de progreco
+            self.label_titulo_informacoes_progresso = ctk.CTkLabel(self.frame_informacoes_mistura, text="PROGRESSO", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
+            self.label_titulo_informacoes_progresso.pack(fill="x")
+
+            #barra de progresso
+            self.barra_progresso_informacoes = ctk.CTkProgressBar(self.frame_informacoes_mistura, orientation="horizontal", height=20, progress_color=config.CORES["secundaria"], mode="determinate")
+            self.barra_progresso_informacoes.pack(fill="x", pady=10, padx=5)
+            self.barra_progresso_informacoes.set(0)
 
             # ---------------- Frame do Centro --------------------
             #a confirmar frame
@@ -165,16 +187,17 @@ class Conferencia_Misturas():
             self.frame_acofirmar.grid_rowconfigure(2, weight=1)
 
             #texto titulo frame a confirmar
-            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Misturas", height=100, width=400, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
-            self.label_titulo_frame_aconfirmar.grid(row=0, column=0, padx=1, pady=1)
+            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Misturas", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
+            self.label_titulo_frame_aconfirmar.pack( padx=1, pady=1, fill="x")
 
             #a confirmar label texto
             self.label_confirmar = ctk.CTkLabel(self.frame_acofirmar, text=self.material[self.cont], height=100, width=400, font=("Arial", 60, "bold"), text_color=config.CORES["texto"])
-            self.label_confirmar.grid(row=1, column=0, padx=10, pady=10)
+            self.label_confirmar.pack(padx=5, pady=5, fill="x")
 
             #a confirmar entry 
-            self.entry_aconfirmar = ctk.CTkEntry(self.frame_acofirmar, height=100, font=("Arial", 30))
-            self.entry_aconfirmar.grid(sticky="we", row=2, column=0, pady=20, padx=20)
+            self.entry_aconfirmar = ctk.CTkEntry(self.frame_acofirmar, height=70, font=("Arial", 30))
+            self.entry_aconfirmar.pack(padx=15, pady=(5, 15), fill="x")
+
             func.focar_campo(self.frame, self.entry_aconfirmar)
 
             self.entry_aconfirmar.bind("<Return>", lambda event: self.verificar_mistura())
@@ -211,15 +234,41 @@ class Conferencia_Misturas():
     def verificar_mistura(self, event=None):
         if self.cont >= len(self.material):
             return
-            
         entrada = self.entry_aconfirmar.get().strip()
         mistura = self.material[self.cont]
         
         if mistura in entrada:
             print("confirmada")
+
+            #adiciona ultma confirmacao ao historico
             confirmado = Confirmado(self.frame_lista_direita, mistura, config.CORES["borda"],)
+
+            
+            #atualiza contador
             self.cont += 1
+
+            #atualiza mistura na tela
             self.mostrar_mistura_atual()
+
+            #atualiza texto de quantidade
+            self.label_quantidade_mistura.configure(text=f"{self.cont}/{self.total}")
+
+            #atualiza barra de progresso
+            self.escala = self.cont/self.total
+            if self.escala <= 0.25:
+                 self.barra_progresso_informacoes.configure(progress_color="#DC3545")
+            elif self.escala <= 0.5:
+                 self.barra_progresso_informacoes.configure(progress_color="#cfa530")
+            elif self.escala <= 0.75:
+                 self.barra_progresso_informacoes.configure(progress_color="#2b51ce")
+            elif self.escala <= 1:
+                 self.barra_progresso_informacoes.configure(progress_color="#28a745")
+                 
+                
+                 
+            
+
+            self.barra_progresso_informacoes.set(self.escala)
 
             self.messagem_sucesso = ctk.CTkLabel(self.frame_conteiner, text="CÓDIGO CONFIRMADA", width=300, height=80, font=("Arial", 20, "bold"), fg_color=config.CORES["sucesso"])
             self.messagem_sucesso.grid(row=4, column=2, padx=10, pady=10)
@@ -241,6 +290,8 @@ class Conferencia_Misturas():
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
 
+    def voltar_menu(self):
+        self.voltar()
     
 
 if __name__ == "__main__":

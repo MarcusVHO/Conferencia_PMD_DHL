@@ -33,7 +33,7 @@ class Sistema_DHL(ctk.CTk):
 
     def mostrar_conferencia_misturas(self):
         self.limpar()
-        self.conferencia_misturas = Conferencia_Misturas(self)
+        self.conferencia_misturas = Conferencia_Misturas(self, self.mostrar_menu_conferencia)
         self.conteiner_frame = self.conferencia_misturas.frame
         self.conteiner_frame.pack(fill="both", expand=True)
 
