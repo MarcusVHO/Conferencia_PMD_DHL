@@ -22,7 +22,7 @@ def resource_path(relative_path):
 
 #Configurações Geral do app
 
-APP_TITLE = "Sistema PMD"
+APP_TITLE = "Sistema de Apoio Operacional"
 APP_SIZE = "1470x730"
 APP_THEME = "light"
 

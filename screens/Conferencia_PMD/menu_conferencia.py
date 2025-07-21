@@ -6,13 +6,15 @@ import sys
 import os 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
+import utils.funcoes as func
 
 class Menu_Conferencia():
-    def __init__(self, app, callback_troca_tela_misturas_normais, voltar):
+    def __init__(self, app, callback_troca_tela_misturas_normais, voltar, callback_tela_fines):
         self.app = app
         self.callback_troca_tela_misturas_normais = callback_troca_tela_misturas_normais
         self.frame = ctk.CTkFrame(self.app, fg_color=config.CORES["primaria"],corner_radius=False)
         self.voltar = voltar
+        self.ir_para_fines = callback_tela_fines
         
 
         #cabeçalho 
@@ -145,7 +147,9 @@ class Menu_Conferencia():
             font=("Arial", 20),
             text_color=config.CORES["texto"],
             anchor="w",
-            corner_radius=0)
+            corner_radius=0,
+            command=self.ir_para_tela_fines,
+            )
         self.botao_conferir_fines_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
 
@@ -170,9 +174,9 @@ class Menu_Conferencia():
             font=("Arial",20)
         )
         self.label_OPT.pack(side="right", pady=20, padx=10)
-
+        func.focar_campo(self.app, self.entry_OPT)
         #funcional
-        self.entry_OPT.bind("<Return>", command=self.ir_para_misturas_normais)
+        self.entry_OPT.bind("<Return>", command=self.opt)
         self.app.bind("<Escape>", self.voltar)
           
 
@@ -184,9 +188,25 @@ class Menu_Conferencia():
     def ir_para_misturas_normais(self, event=None):
         self.callback_troca_tela_misturas_normais()
 
+    def ir_para_tela_fines(self, event=None):
+        self.ir_para_fines()
+
+    def opt(self, event=None):
+        
+        opcao = self.entry_OPT.get().strip()
+
+        if opcao == "1":
+            self.entry_OPT.delete(0, "end")
+            self.ir_para_misturas_normais()
+
+        elif opcao =="2":
+            self.entry_OPT.delete(0, "end")
+            return
+        
+        else:
+            self.entry_OPT.delete(0, "end")
+
+
+
     def voltar(self, evente=None):
         self.voltar()
-if __name__ == "__main__":
-    menu_conferencia = Menu_Conferencia()
-    menu_conferencia.abrir()
-    print(menu_conferencia.opcao)

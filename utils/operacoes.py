@@ -65,3 +65,25 @@ def misturas_normais(arquivo):
             return materiais_mistura
             
 
+#Obtem Fines das misturas
+def obter_fines(arquivo):
+    df = extrair_dados(arquivo)
+    df = pd.DataFrame(df)
+
+    coluna_material = "Material"
+    padrao = re.compile(r"^1.*[a-zA-Z]$")
+
+    materiais_fines = []
+
+    indice_quebra = None
+
+    for i, material in enumerate(df[coluna_material]):
+        if not padrao.match(str(material)):
+            indice_quebra = i
+            break
+    materiais_fines = df.iloc[indice_quebra +1:][coluna_material]
+    df_resultado = materiais_fines[materiais_fines.astype(str).str.match(padrao)]
+    df_resultado = df_resultado.reset_index(drop=True)
+    return df_resultado
+        
+

@@ -26,7 +26,7 @@ class Confirmado():
             def rolar_pra_baixo(self):
                  self.frame_lista_direita._parent_canvas.yview_moveto(1.0)
 
-class Conferencia_Misturas():
+class Conferencia_Fines():
     def __init__(self, app, voltar):
         self.app = app
         self.frame = ctk.CTkFrame(self.app)
@@ -55,7 +55,7 @@ class Conferencia_Misturas():
         #Titulo
         self.titulo_label = ctk.CTkLabel(
             self.header, 
-            text="CONFERENCIA MISTURAS", 
+            text="CONFERENCIA FINES", 
             font=("Arial",20), 
             text_color=config.CORES["texto"])
         self.titulo_label.pack(side="left", padx=10)
@@ -98,16 +98,17 @@ class Conferencia_Misturas():
         self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.voltar)
         self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
         
-        self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_misturar)
+        self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_fines)
         self.botao_continuar_solicitacao_op.pack(side="right", padx=10, pady=20)
         
-        self.entry_solicitacao_op.bind("<Return>", command=self.conferir_misturar)
+        self.entry_solicitacao_op.bind("<Return>", command=self.conferir_fines)
+        self.app.bind("<Escape>", self.voltar)
         func.focar_campo(self.frame, self.entry_solicitacao_op)
 
         
 
 
-    def conferir_misturar(self, event=None):
+    def conferir_fines(self, event=None):
         self.entrada_op = self.entry_solicitacao_op.get().strip()
 
         #acha nome de arquivo
@@ -124,7 +125,7 @@ class Conferencia_Misturas():
 
         else:
             #otbtem df com dados
-            self.material = op.misturas_normais(self.nome_arquivo)
+            self.material = op.obter_fines(self.nome_arquivo)
             self.total = len(self.material)
             
             #Fecha frame de solicitação 
@@ -228,7 +229,7 @@ class Conferencia_Misturas():
             mistura  = self.material[self.cont]
             self.label_confirmar.configure(text=mistura)
         else:
-            self.label_confirmar.configure(text="Fim das misturas")
+            self.label_confirmar.configure(text=f"Fim dos FINES")
             self.entry_aconfirmar.configure(state="disabled")
 
     def verificar_mistura(self, event=None):

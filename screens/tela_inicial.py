@@ -8,8 +8,7 @@ import sys
 import os 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
-import winsound
-
+import utils.funcoes as func
 
 class Tela_Inicial():
     def __init__(self, app, callback_troca_tela_menu_misturas):
@@ -91,7 +90,7 @@ class Tela_Inicial():
 
         self.botao_conferencia_btn = ctk.CTkButton(
             self.botao_conferencia, 
-            text="CONFERÊNCIA", 
+            text="CONFERÊNCIA PMD", 
             height=90,
             width=190, 
             fg_color=config.CORES["fundo"], 
@@ -100,7 +99,7 @@ class Tela_Inicial():
             text_color=config.CORES["texto"],
             command= self.ir_para_menu_misturas,
             corner_radius=0)
-        self.botao_conferencia_btn.pack(fill="both", expand=True)
+        self.botao_conferencia_btn.pack(fill="both", expand=True, padx=5)
 
         #Botão Relatório 
         self.botao_relatório = ctk.CTkFrame(self.area_botoes, height=100, width=200, fg_color="white",corner_radius=5)
@@ -145,9 +144,10 @@ class Tela_Inicial():
             width=100
         )
         self.entry_OPT.pack(side="left" )
+        func.focar_campo(self.app, self.entry_OPT)
 
         #Funcional
-        self.entry_OPT.bind("<Return>",self.ir_para_menu_misturas)
+        self.entry_OPT.bind("<Return>",self.opt)
         
     def ir_para_menu_misturas(self, event=None):
         self.callback_troca_tela_menu_misturas()
@@ -157,6 +157,21 @@ class Tela_Inicial():
         agora = datetime.datetime.now().strftime("%H:%M:%S")
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
+
+    def opt(self, event=None):
+        
+        opcao = self.entry_OPT.get().strip()
+
+        if opcao == "1":
+            self.entry_OPT.delete(0, "end")
+            self.ir_para_menu_misturas()
+
+        elif opcao =="2":
+            self.entry_OPT.delete(0, "end")
+            return
+        
+        else:
+            self.entry_OPT.delete(0, "end")
 
 
 
