@@ -295,14 +295,4 @@ class Conferencia_Fines():
         self.voltar()
     
 
-if __name__ == "__main__":
-        app = ctk.CTk()
-        app.title(config.APP_TITLE)
-        app.geometry(config.APP_SIZE)
-        app.iconbitmap(config.APP_ICO)
-        frame = None
 
-        conferir = Conferencia_Misturas(app)
-        frame = conferir.frame
-        frame.pack(fill="both", expand=True)
-        app.mainloop()
