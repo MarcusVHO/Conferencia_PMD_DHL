@@ -188,7 +188,7 @@ class Conferencia_Fines():
             self.frame_acofirmar.grid_rowconfigure(2, weight=1)
 
             #texto titulo frame a confirmar
-            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Misturas", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
+            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Fines", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
             self.label_titulo_frame_aconfirmar.pack( padx=1, pady=1, fill="x")
 
             #a confirmar label texto

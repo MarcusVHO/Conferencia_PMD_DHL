@@ -23,8 +23,13 @@ def achar_arquivo(op):
             return nome_arquivo
     return "N/A"
 
-def extrair_dados(arquivo):
-    caminho = config.APP_PDF / "Misturas" / arquivo
+def extrair_dados(arquivo, pasta):
+    
+    if pasta == "misturas":
+        caminho = config.APP_PDF / "Misturas" / arquivo
+    elif pasta == "sts":
+        caminho = config.APP_PDF / "STS" / arquivo
+
     dataframes = []
     if not Path(caminho).exists():
         print(f"Arquivo não encontrado: {arquivo}")
@@ -51,7 +56,7 @@ def extrair_dados(arquivo):
 
 #Obtem MIsturas normais
 def misturas_normais(arquivo):
-    df = extrair_dados(arquivo)
+    df = extrair_dados(arquivo, "misturas")
     df = df['Material'].dropna().astype(str)
     padrao = re.compile(r"^1.*[a-zA-Z]$")
 
@@ -67,7 +72,7 @@ def misturas_normais(arquivo):
 
 #Obtem Fines das misturas
 def obter_fines(arquivo):
-    df = extrair_dados(arquivo)
+    df = extrair_dados(arquivo, "misturas")
     df = pd.DataFrame(df)
 
     coluna_material = "Material"
