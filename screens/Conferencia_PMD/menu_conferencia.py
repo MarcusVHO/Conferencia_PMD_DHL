@@ -9,12 +9,13 @@ import config
 import utils.funcoes as func
 
 class Menu_Conferencia():
-    def __init__(self, app, callback_troca_tela_misturas_normais, voltar, callback_tela_fines):
+    def __init__(self, app, callback_troca_tela_misturas_normais, voltar, callback_tela_fines, callback_tela_sts):
         self.app = app
         self.callback_troca_tela_misturas_normais = callback_troca_tela_misturas_normais
         self.frame = ctk.CTkFrame(self.app, fg_color=config.CORES["primaria"],corner_radius=False)
         self.voltar = voltar
         self.ir_para_fines = callback_tela_fines
+        self.ir_para_sts = callback_tela_sts
         
 
         #cabeçalho 
@@ -122,7 +123,8 @@ class Menu_Conferencia():
             font=("Arial", 20),
             text_color=config.CORES["texto"],
             anchor="w",
-            corner_radius=0)
+            corner_radius=0,
+            command=self.ir_para_tela_sts)
         self.botao_conferir_sts_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
         #Botão Conferir Fines 
@@ -190,6 +192,9 @@ class Menu_Conferencia():
 
     def ir_para_tela_fines(self, event=None):
         self.ir_para_fines()
+
+    def ir_para_tela_sts(self, event=None):
+        self.ir_para_sts()
 
     def opt(self, event=None):
         

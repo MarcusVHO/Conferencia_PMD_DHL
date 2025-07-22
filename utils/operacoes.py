@@ -4,12 +4,18 @@ import os
 import pandas as pd
 import re
 import pdfplumber
+import customtkinter as ctk
+import winsound
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
+import utils.funcoes as func
 
-def achar_arquivo(op):
-    misturas_normais_dir = Path(config.APP_PDF).resolve() / "Misturas"
+def achar_arquivo(op, pasta):
+    if pasta == "misturas":
+        misturas_normais_dir = Path(config.APP_PDF).resolve() / "Misturas"
+    elif pasta == "sts":
+        misturas_normais_dir = Path(config.APP_PDF).resolve() / "STS"
 
     if not misturas_normais_dir.exists():
         print(f"Pasta não encontrada: {misturas_normais_dir}")
@@ -52,8 +58,6 @@ def extrair_dados(arquivo, pasta):
     return df_geral
 
 
-
-
 #Obtem MIsturas normais
 def misturas_normais(arquivo):
     df = extrair_dados(arquivo, "misturas")
@@ -92,3 +96,31 @@ def obter_fines(arquivo):
     return df_resultado
         
 
+#def obter sts
+def obter_sts(arquivo):
+    #extrai dataframe do arquivo
+    df = extrair_dados(arquivo, "sts")
+    
+    #descarta informações desnecessarias
+    colunas_necessarias = ['Material', 'Quantity']
+    df = df[colunas_necessarias]
+    df = df.dropna()
+    
+    #filtra materiais 
+    padrao = re.compile(r"^1.*[a-zA-Z]$")
+    df = df[df["Material"].astype(str).str.match(padrao)].reset_index(drop=True)
+    df["Quantity"] = df["Quantity"].astype(str).str.replace(r"[^\d.,]", "", regex=True).str.replace(",", ".")
+    df["Quantity"] = pd.to_numeric(df["Quantity"], errors="coerce")
+    
+    return df
+
+    
+
+
+
+if __name__ == "__main__":
+    app = ctk.CTk()
+    app.geometry(config.APP_SIZE)
+
+    janela = cirar_lista_item("104090x",1600)
+    app.mainloop()
