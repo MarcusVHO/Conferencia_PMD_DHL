@@ -154,7 +154,7 @@ class Conferencia_Fines():
             self.frame_informacoes_mistura.grid(row=0, column=0, rowspan=4, sticky="wn", padx=5, pady=5)
 
             #Titulo Informações Mistura
-            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="MISTURA", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
+            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="FINES", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
             self.label_titulo_informacoes_mistura.pack(fill="x")
             
             #op dentro da caixa de informação

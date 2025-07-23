@@ -104,14 +104,14 @@ class Conferencia_STS():
         self.entry_solicitacao_op = ctk.CTkEntry(self.frame_solicitacao_op, placeholder_text="Ordem de Produção", height=40)
         self.entry_solicitacao_op.pack(fill="x", expand=True, padx=10)
         
-        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"])
+        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.Voltar)
         self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
         
         self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_STS)
         self.botao_continuar_solicitacao_op.pack(side="right", padx=10, pady=20)
         
         self.entry_solicitacao_op.bind("<Return>", command=self.conferir_STS)
-        self.app.bind("<Escape>")
+        self.app.bind("<Escape>", self.Voltar)
         func.focar_campo(self.frame, self.entry_solicitacao_op)
 
 
@@ -124,7 +124,7 @@ class Conferencia_STS():
     def conferir_STS(self, event=None):
         #obtem dado do entry
         self.entrada_op = self.entry_solicitacao_op.get().strip()
-
+        self.entry_solicitacao_op.delete(0, "end")
         #acha nome de arquivo
         self.nome_arquivo = op.achar_arquivo(self.entrada_op, "sts")
 
@@ -188,7 +188,7 @@ class Conferencia_STS():
             self.frame_informacoes_mistura.grid(row=0, column=0, rowspan=4, sticky="wn", padx=5, pady=5)
 
             #Titulo Informações Mistura
-            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="MISTURA", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
+            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="STS", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
             self.label_titulo_informacoes_mistura.pack(fill="x")
             
             #op dentro da caixa de informação
@@ -222,7 +222,7 @@ class Conferencia_STS():
             self.frame_acofirmar.grid_rowconfigure(2, weight=1)
 
             #texto titulo frame a confirmar
-            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Misturas", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
+            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - STS", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
             self.label_titulo_frame_aconfirmar.pack( padx=1, pady=1, fill="x")
 
             #a confirmar label texto
@@ -356,6 +356,7 @@ class Conferencia_STS():
                 erro_solicitacao_op.pack(padx=10, pady=20, side="bottom", fill="x", expand=True)
                 frame.after(1500,erro_solicitacao_op.pack_forget)
                 winsound.MessageBeep(winsound.MB_ICONHAND)
+
         app = ctk.CTkToplevel()
         app.geometry("650x230")
         app.title("Solicitação de peso unitário")
@@ -374,7 +375,7 @@ class Conferencia_STS():
         entry_solicitacao_peso = ctk.CTkEntry(frame_solicitacao_peso, placeholder_text="Ordem de Produção", height=40)
         entry_solicitacao_peso.pack(fill="x", expand=True, padx=10)
         
-        botao_voltar_solicitacao_peso = ctk.CTkButton(frame_solicitacao_peso, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"])
+        botao_voltar_solicitacao_peso = ctk.CTkButton(frame_solicitacao_peso, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.Voltar and app.destroy)
         botao_voltar_solicitacao_peso.pack(side="left", padx=10, pady=20)
         
         botao_continuar_solicitacao_peso = ctk.CTkButton(frame_solicitacao_peso, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=criar_lista)
@@ -382,6 +383,7 @@ class Conferencia_STS():
 
         func.focar_campo(app, entry_solicitacao_peso)
         entry_solicitacao_peso.bind("<Return>", criar_lista)
+ 
         frame_solicitacao_peso.wait_window()
 
         print("Janela fechada")
