@@ -6,8 +6,8 @@ import re
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+
 import config
 import utils.funcoes as func
 import utils.operacoes as op
@@ -33,7 +33,7 @@ class Conferencia_Fines():
         self.frame = ctk.CTkFrame(self.app)
         self.cont = 0
         self.total = 0
-        self.voltar = voltar
+        self.callback_voltar = voltar
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
@@ -96,14 +96,14 @@ class Conferencia_Fines():
         self.entry_solicitacao_op = ctk.CTkEntry(self.frame_solicitacao_op, placeholder_text="Ordem de Produção", height=40)
         self.entry_solicitacao_op.pack(fill="x", expand=True, padx=10)
         
-        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.voltar)
+        self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.Voltar)
         self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
         
         self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_fines)
         self.botao_continuar_solicitacao_op.pack(side="right", padx=10, pady=20)
         
         self.entry_solicitacao_op.bind("<Return>", command=self.conferir_fines)
-        self.app.bind("<Escape>", self.voltar)
+        self.app.bind("<Escape>", self.Voltar)
         func.focar_campo(self.frame, self.entry_solicitacao_op)
 
         
@@ -292,8 +292,9 @@ class Conferencia_Fines():
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
 
-    def voltar(self):
-        self.voltar()
+    def Voltar(self, event=None):
+        self.frame.pack_forget()
+        self.callback_voltar()
     
 
 

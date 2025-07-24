@@ -6,7 +6,8 @@ import re
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+
 import config
 import utils.funcoes as func
 import utils.operacoes as op
@@ -390,4 +391,5 @@ class Conferencia_STS():
         return self.lista_resultado
 
     def Voltar(self, event=None):
+        self.frame.pack_forget()
         self.voltar()
