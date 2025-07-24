@@ -1,23 +1,28 @@
-import customtkinter as ctk
-from PIL import Image
-import datetime
-import winsound
 import sys
 import os 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config
+
+import customtkinter as ctk
+from PIL import Image
+import datetime
+from Conferencia_PMD.Conferencia_misturas.conferencia_misturas import Conferencia_Misturas
+from Conferencia_PMD.Conferencia_sts.conferencia_sts import Conferencia_STS
+from Conferencia_PMD.Conferencia_fines.conferencia_fines import Conferencia_Fines
+import winsound
+
 import utils.funcoes as func
 
 class Menu_Conferencia():
-    def __init__(self, app, callback_troca_tela_misturas_normais, voltar, callback_tela_fines, callback_tela_sts):
+    def __init__(self, app, voltar, limpar, mostra_menu_conferencia):
         self.app = app
-        self.callback_troca_tela_misturas_normais = callback_troca_tela_misturas_normais
+        self.callback_troca_tela_misturas_normais = Conferencia_Misturas
         self.frame = ctk.CTkFrame(self.app, fg_color=config.CORES["primaria"],corner_radius=False)
         self.voltar = voltar
-        self.ir_para_fines = callback_tela_fines
-        self.ir_para_sts = callback_tela_sts
-        
-
+        self.ir_para_fines = Conferencia_Fines
+        self.ir_para_sts = Conferencia_STS
+        self.limpar_tela = limpar
+        self.mostrar_menu_conferencia = mostra_menu_conferencia
         #cabeçalho 
         self.header = ctk.CTkFrame(
             self.frame,
@@ -97,7 +102,7 @@ class Menu_Conferencia():
             font=("Arial", 20),
             text_color=config.CORES["texto"],
             anchor="w",
-            command=self.ir_para_misturas_normais,
+            command=self.mostrar_conferencia_misturas,
             corner_radius=0)
         self.botao_conferir_misturas_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
@@ -124,7 +129,7 @@ class Menu_Conferencia():
             text_color=config.CORES["texto"],
             anchor="w",
             corner_radius=0,
-            command=self.ir_para_tela_sts)
+            command=self.mostrar_conferencia_sts)
         self.botao_conferir_sts_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
         #Botão Conferir Fines 
@@ -150,7 +155,7 @@ class Menu_Conferencia():
             text_color=config.CORES["texto"],
             anchor="w",
             corner_radius=0,
-            command=self.ir_para_tela_fines,
+            command=self.mostrar_conferencia_fines,
             )
         self.botao_conferir_fines_btn.pack(side="left",padx=(0,1), pady=1, fill="both", expand=True)
 
@@ -187,14 +192,26 @@ class Menu_Conferencia():
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
 
-    def ir_para_misturas_normais(self, event=None):
-        self.callback_troca_tela_misturas_normais()
+    #conferecia misturas
+    def mostrar_conferencia_misturas(self, event=None):
+        self.limpar_tela()
+        self.conferencia_misturas = Conferencia_Misturas(self.app, self.mostrar_menu_conferencia)
+        self.conteiner_frame = self.conferencia_misturas.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
 
-    def ir_para_tela_fines(self, event=None):
-        self.ir_para_fines()
-
-    def ir_para_tela_sts(self, event=None):
-        self.ir_para_sts()
+    #conferencia sts
+    def mostrar_conferencia_sts(self, event=None):
+        self.limpar_tela()
+        self.conferencia_sts = Conferencia_STS(self.app, self.mostrar_menu_conferencia)
+        self.conteiner_frame = self.conferencia_sts.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
+        
+    #conferencia fines
+    def mostrar_conferencia_fines(self, event=None):
+        self.limpar_tela()
+        self.conferencia_misturas = Conferencia_Fines(self.app, self.mostrar_menu_conferencia)
+        self.conteiner_frame = self.conferencia_misturas.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
 
     def opt(self, event=None):
         

@@ -6,7 +6,7 @@ import re
 
 import sys
 import os 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 import config
 import utils.funcoes as func
 import utils.operacoes as op
@@ -26,13 +26,13 @@ class Confirmado():
             def rolar_pra_baixo(self):
                  self.frame_lista_direita._parent_canvas.yview_moveto(1.0)
 
-class Conferencia_Fines():
-    def __init__(self, app, voltar):
+class Conferencia_Misturas():
+    def __init__(self, app, Voltar):
         self.app = app
         self.frame = ctk.CTkFrame(self.app)
         self.cont = 0
         self.total = 0
-        self.voltar = voltar
+        self.callback_voltar = Voltar
 
         #cabeçalho 
         self.header = ctk.CTkFrame(
@@ -55,7 +55,7 @@ class Conferencia_Fines():
         #Titulo
         self.titulo_label = ctk.CTkLabel(
             self.header, 
-            text="CONFERENCIA FINES", 
+            text="CONFERENCIA MISTURAS", 
             font=("Arial",20), 
             text_color=config.CORES["texto"])
         self.titulo_label.pack(side="left", padx=10)
@@ -98,17 +98,17 @@ class Conferencia_Fines():
         self.botao_voltar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="VOLTAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.voltar)
         self.botao_voltar_solicitacao_op.pack(side="left", padx=10, pady=20)
         
-        self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_fines)
+        self.botao_continuar_solicitacao_op = ctk.CTkButton(self.frame_solicitacao_op, text="CONTINUAR", height=50, width=100, font=("Arial", 15, "bold"), fg_color=config.CORES["texto"], text_color=config.CORES["fundo"], command=self.conferir_misturar)
         self.botao_continuar_solicitacao_op.pack(side="right", padx=10, pady=20)
         
-        self.entry_solicitacao_op.bind("<Return>", command=self.conferir_fines)
+        self.entry_solicitacao_op.bind("<Return>", command=self.conferir_misturar)
         self.app.bind("<Escape>", self.voltar)
         func.focar_campo(self.frame, self.entry_solicitacao_op)
 
         
 
 
-    def conferir_fines(self, event=None):
+    def conferir_misturar(self, event=None):
         self.entrada_op = self.entry_solicitacao_op.get().strip()
 
         #acha nome de arquivo
@@ -125,7 +125,7 @@ class Conferencia_Fines():
 
         else:
             #otbtem df com dados
-            self.material = op.obter_fines(self.nome_arquivo)
+            self.material = op.misturas_normais(self.nome_arquivo)
             self.total = len(self.material)
             
             #Fecha frame de solicitação 
@@ -154,7 +154,7 @@ class Conferencia_Fines():
             self.frame_informacoes_mistura.grid(row=0, column=0, rowspan=4, sticky="wn", padx=5, pady=5)
 
             #Titulo Informações Mistura
-            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="FINES", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
+            self.label_titulo_informacoes_mistura = ctk.CTkLabel(self.frame_informacoes_mistura, text="MISTURA", font=("Arial", 20, "bold"), height=40, text_color=config.CORES["fundo"], fg_color=config.CORES["texto"])
             self.label_titulo_informacoes_mistura.pack(fill="x")
             
             #op dentro da caixa de informação
@@ -188,7 +188,7 @@ class Conferencia_Fines():
             self.frame_acofirmar.grid_rowconfigure(2, weight=1)
 
             #texto titulo frame a confirmar
-            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Fines", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
+            self.label_titulo_frame_aconfirmar = ctk.CTkLabel(self.frame_acofirmar, text="DHL - Misturas", height=100, font=("Arial", 50, "bold"), text_color=config.CORES["fundo"],fg_color=config.CORES["texto"])
             self.label_titulo_frame_aconfirmar.pack( padx=1, pady=1, fill="x")
 
             #a confirmar label texto
@@ -229,7 +229,7 @@ class Conferencia_Fines():
             mistura  = self.material[self.cont]
             self.label_confirmar.configure(text=mistura)
         else:
-            self.label_confirmar.configure(text=f"Fim dos FINES")
+            self.label_confirmar.configure(text="Fim das misturas")
             self.entry_aconfirmar.configure(state="disabled")
 
     def verificar_mistura(self, event=None):
@@ -291,8 +291,8 @@ class Conferencia_Fines():
         self.label_relogio.configure(text=agora)
         self.frame.after(1000, self.atualizar_relogio)
 
-    def voltar(self):
-        self.voltar()
+    def voltar(self, event=None):
+        self.frame.pack_forget()
+        self.callback_voltar()
     
-
 

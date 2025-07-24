@@ -1,8 +1,5 @@
 from screens.tela_inicial import Tela_Inicial
 from screens.Conferencia_PMD.menu_conferencia import Menu_Conferencia
-from screens.Conferencia_PMD.conferencia_misturas import Conferencia_Misturas
-from screens.Conferencia_PMD.conferencia_sts import Conferencia_STS
-from screens.Conferencia_PMD.conferencia_fines import Conferencia_Fines
 import customtkinter as ctk
 import config
 
@@ -18,7 +15,7 @@ class Sistema_DHL(ctk.CTk):
         self.fg_color=config.CORES["primaria"]
 
     #limpa tela exibida atualmente
-    def limpar(self):
+    def limpar(self, event=None):
         if self.conteiner_frame is not None:
             self.conteiner_frame.pack_forget()
             self.conteiner_frame.destroy()
@@ -34,31 +31,11 @@ class Sistema_DHL(ctk.CTk):
     #cria menu conferencia pmd
     def mostrar_menu_conferencia(self, event=None):
         self.limpar()
-        self.menu_conferncia = Menu_Conferencia(self, self.mostrar_conferencia_misturas, self.mostrar_tela_inicial, self.mostrar_conferencia_fines, self.mostrar_conferencia_sts)
+        self.menu_conferncia = Menu_Conferencia(self, self.mostrar_tela_inicial, self.limpar, self.mostrar_menu_conferencia)
         self.conteiner_frame = self.menu_conferncia.frame
         self.conteiner_frame.pack(fill="both", expand=True)
 
-    #conferecia misturas
-    def mostrar_conferencia_misturas(self, event=None):
-        self.limpar()
-        self.conferencia_misturas = Conferencia_Misturas(self, self.mostrar_menu_conferencia)
-        self.conteiner_frame = self.conferencia_misturas.frame
-        self.conteiner_frame.pack(fill="both", expand=True)
-
-    #conferencia sts
-    def mostrar_conferencia_sts(self, event=None):
-        self.limpar()
-        self.conferencia_sts = Conferencia_STS(self, self.mostrar_menu_conferencia)
-        self.conteiner_frame = self.conferencia_sts.frame
-        self.conteiner_frame.pack(fill="both", expand=True)
-        
-    #conferencia fines
-    def mostrar_conferencia_fines(self, event=None):
-        self.limpar()
-        self.conferencia_misturas = Conferencia_Fines(self, self.mostrar_menu_conferencia)
-        self.conteiner_frame = self.conferencia_misturas.frame
-        self.conteiner_frame.pack(fill="both", expand=True)
-
+    
 if __name__ == "__main__":
     app = Sistema_DHL()
     app.mainloop()
