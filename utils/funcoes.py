@@ -7,6 +7,6 @@ def atualizar_relogio(app,relogio):
         app.after(1000, atualizar_relogio)
 
 
-def focar_campo(app, campo):
+def focar_campo(app, campo, event=None):
         campo.focus()
         app.after(100, campo.focus)

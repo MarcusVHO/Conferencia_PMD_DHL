@@ -26,6 +26,9 @@ APP_TITLE = "Sistema de Apoio Operacional"
 APP_SIZE = "1470x730"
 APP_THEME = "light"
 
+#usuario
+USUARIO_LOGADO = None
+
 
 #Caminhos 
 BASE_DIR = Path(__file__).resolve().parent
@@ -33,14 +36,19 @@ APP_ICO = resource_path("assets/iconeDHL.ico")
 APP_ICO_PNG = resource_path("assets/iconeDHL.png")
 APP_PDF = diretorio_arquivo_exe() / "PDF"
 APP_FONTE = ("Arial", 20)
+APP_IMG_PESSOA = resource_path("assets/icone_pessoa.png")
 
 #Cores do app
 CORES = {
     "primaria": "#FFCC00",      # Amarelo DHL
     "secundaria": "#D40511",    # Vermelho DHL
     "texto": "#000000",         # Preto
+    "texto_dark": "#FFFFFF",
     "fundo": "#FFFFFF",         # Branco
     "borda": "#CCCCCC",         # Cinza claro
-    "sucesso": "#28a745",       # Verde
-    "erro": "#DC3545",          # Vermelho escuro
+    "borda_dark": "#1A1919",     # Borda Preta
+    "sucesso": "#28a745",         # Verde
+    "erro": "#DC3545",            # Vermelho escuro
+    "fundo_dark": "#1A1919",     # Borda Preta
+
 }

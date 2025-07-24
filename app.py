@@ -1,4 +1,5 @@
-from screens.tela_inicial import Tela_Inicial
+from screens.login import Login
+from screens.menu_inicial import Tela_Inicial
 from screens.Conferencia_PMD.menu_conferencia import Menu_Conferencia
 import customtkinter as ctk
 import config
@@ -9,10 +10,11 @@ class Sistema_DHL(ctk.CTk):
         self.title(config.APP_TITLE)
         self.geometry(config.APP_SIZE)
         self.conteiner_frame = None
-        self.mostrar_tela_inicial()
         self.iconbitmap(config.APP_ICO)
         self.corner_radius=False
         self.fg_color=config.CORES["primaria"]
+        self.mostrar_tela_login()
+
 
     #limpa tela exibida atualmente
     def limpar(self, event=None):
@@ -20,6 +22,13 @@ class Sistema_DHL(ctk.CTk):
             self.conteiner_frame.pack_forget()
             self.conteiner_frame.destroy()
             self.conteiner_frame = None
+
+    #cira tela de login
+    def mostrar_tela_login(self, event=None):
+        self.limpar()
+        self.tela_login = Login(self, self.mostrar_tela_inicial)
+        self.conteiner_frame = self.tela_login.frame
+        self.conteiner_frame.pack(fill="both", expand=True)
 
     #cira o menu inicial
     def mostrar_tela_inicial(self, event=None):

@@ -1,13 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+
 import customtkinter as ctk
 import datetime
 from PIL import Image
 import winsound
 import re
-
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
-
 import config
 import utils.funcoes as func
 import utils.operacoes as op
