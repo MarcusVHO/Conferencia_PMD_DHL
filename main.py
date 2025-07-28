@@ -1,0 +1,72 @@
+#Rsponsavel pela criacao do aplicativo principal
+#Criador: Marcus Vinicius Hilário de Oliveira
+#Data: 25/07/2025
+
+#------------------ inportações Externas --------------------
+import customtkinter as ctk
+#------------------ inportações Externas --------------------
+
+#------------------ inportações internas --------------------
+import config.colors as cor
+import config.settings as st
+
+from core.navigation import NavigationManager
+from view.login_view import Login
+from view.home_view import Home
+from view.pmd_home_view import Pmd
+from view.pmd_insert_mist_view import Insert_Mist
+from view.pmd_conferencia_menu_view import Conferencia_Pmd_Menu
+from view.pmd_conferencia_sel_de_op_view import Seletor_de_Op
+#------------------ inportações internas --------------------
+
+
+
+#aparencia do sistema
+ctk.set_appearance_mode(st.APP_THEME)
+
+#frame criador do app
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title(st.APP_TITLE)
+        self.geometry(st.APP_SIZE)
+        self.iconbitmap(st.APP_ICO)
+        self.navigator = NavigationManager(self)
+
+        # Carrega primeira tela
+        self.show_login()
+
+
+    #comando criador tela de login
+    def show_login(self):
+        self.navigator.show_frame(lambda master=self: Login(master, navigate_to_home=self.show_home))
+
+    #comando criador tela inicial
+    def show_home(self):
+        self.navigator.show_frame(lambda master=self: Home(master, navigate_to_pmd=self.show_PMD))
+
+
+
+
+    #comando criador menu PMD
+    def show_PMD(self):
+        self.navigator.show_frame(lambda master=self: Pmd(master, navigate_to_home=self.show_home, navigate_to_inserir_misturas=self.show_insert_mist, navigate_to_conferencia_pmd=self.show_conferencia_pmd))
+
+    #comando criador tela de inserir misturas do PMD
+    def show_insert_mist(self):
+        self.navigator.show_frame(lambda master=self: Insert_Mist(master, navigate_to_home_pmd=self.show_PMD))
+
+    #camada criadora do submenu de conferencia
+    def show_conferencia_pmd(self):
+        self.navigator.show_frame(lambda master=self: Conferencia_Pmd_Menu(master, navigate_to_home_pmd=self.show_PMD, navigate_to_seletor_de_op=self.show_seletor_de_op))
+
+    #show seletor de op
+    def show_seletor_de_op(self, tipo_de_conferencia):
+        self.navigator.show_frame(lambda master=self: Seletor_de_Op(master, tipo_de_conferencia, navigate_to_menu_conferencia=self.show_conferencia_pmd))
+    
+
+
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
