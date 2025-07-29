@@ -10,7 +10,7 @@ import customtkinter as ctk
 
 #------------------ inportações Internas --------------------
 import config.colors as cor
-import core.pmd_conferencia_sel_de_op_corntroller as core
+import core.pmd.seletor_de_op_controller as core
 from view.components.screen_components import *
 #------------------ inportações Internas --------------------
 
@@ -18,15 +18,16 @@ from view.components.screen_components import *
 
 #Classe primaria da tela
 class Seletor_de_Op(ctk.CTkFrame):
-    def __init__(self, master, tipo_de_conferencia, navigate_to_menu_conferencia):
+    def __init__(self, master, tipo_de_conferencia, navigate_to_menu_conferencia, conferir_mistura):
 
         #inicializacao primaria
         super().__init__(master)
+        self.master = master
 
         #inicializacao de variaveis
         self.tipo_de_conferencia = tipo_de_conferencia
         self.navigate_to_menu_conferencia = navigate_to_menu_conferencia
-
+        self.conferir_mistura = conferir_mistura
         #criacao do frame principal
         self.frame = ctk.CTkFrame(
             self,
@@ -115,6 +116,6 @@ class Seletor_de_Op(ctk.CTkFrame):
 
 
     def criar_botoes(self):
-        core.criar_botoes(self.frame_central, self.tipo_de_conferencia)        
+        core.criar_botoes(self.frame_central, self.tipo_de_conferencia, self.conferir_mistura)        
 
     

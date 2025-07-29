@@ -13,10 +13,11 @@ import config.settings as st
 from core.navigation import NavigationManager
 from view.login_view import Login
 from view.home_view import Home
-from view.pmd_home_view import Pmd
-from view.pmd_insert_mist_view import Insert_Mist
-from view.pmd_conferencia_menu_view import Conferencia_Pmd_Menu
-from view.pmd_conferencia_sel_de_op_view import Seletor_de_Op
+from view.pmd.pmd_home_view import Pmd
+from view.pmd.inserir_mistura_view import Insert_Mist
+from view.pmd.menu_conferencia_view import Conferencia_Pmd_Menu
+from view.pmd.seletor_de_op_view import Seletor_de_Op
+from view.pmd.conferir_mistura_view import Conferir_Mistura
 #------------------ inportações internas --------------------
 
 
@@ -34,7 +35,7 @@ class App(ctk.CTk):
         self.navigator = NavigationManager(self)
 
         # Carrega primeira tela
-        self.show_login()
+        self.show_conferencia_pmd()
 
 
     #comando criador tela de login
@@ -62,7 +63,10 @@ class App(ctk.CTk):
 
     #show seletor de op
     def show_seletor_de_op(self, tipo_de_conferencia):
-        self.navigator.show_frame(lambda master=self: Seletor_de_Op(master, tipo_de_conferencia, navigate_to_menu_conferencia=self.show_conferencia_pmd))
+        self.navigator.show_frame(lambda master=self: Seletor_de_Op(master, tipo_de_conferencia, navigate_to_menu_conferencia=self.show_conferencia_pmd, conferir_mistura=self.show_conferir_mistura))
+
+    def show_conferir_mistura(self, op):
+        self.navigator.show_frame(lambda master=self: Conferir_Mistura(master, op, navigate_to_seletor_de_op=self.show_seletor_de_op))
     
 
 

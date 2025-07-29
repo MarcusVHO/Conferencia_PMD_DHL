@@ -10,18 +10,29 @@ import customtkinter as ctk
 
 #------------------ inportações Internas --------------------
 import config.colors as cor
-import model.pmd_conferencia_sel_de_op_model as model
+import model.pmd.seletro_de_op_model as model
+from view.pmd.conferir_mistura_view import Conferir_Mistura
 from view.components.widgets_reutilizaveis import botao_indentificador
 #------------------ inportações Internas --------------------
 
 
     
-    
 
 
-def criar_botoes(frame, tipo):
+def criar_botoes(frame, tipo, conferir_mistura):
     def ao_clicar(op):
             print(f"{tipo} de OP: {op} selecionada.")
+            
+            if tipo =="mistura_normal":
+                 
+                status = model.verificar_estado_da_op(op)
+                status = status[0]
+                print(f"Status da OP: {op} é ",status)
+
+                if status == "pendente":
+                    conferir_mistura(op)
+                else:
+                    print("Erro")
 
 
 

@@ -12,7 +12,7 @@ import config.settings as st
 import config.colors as cor
 import view.components.widgets_reutilizaveis as alerts
 from view.components.screen_components import *
-import core.pmd_insert_mist_controller as core
+import core.pmd.inserir_mistura_controller as core
 from utils.utilities import *
 #------------------ inportações internas --------------------
 

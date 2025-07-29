@@ -12,7 +12,7 @@ from tkinter import filedialog
 
 
 #------------------ inportações internas --------------------
-import model.pmd_insert_mist_model as model
+import model.pmd.inserir_mistura_model as model
 from view.components.widgets_reutilizaveis import botao_indentificador
 #------------------ inportações internas --------------------
 

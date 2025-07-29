@@ -71,3 +71,25 @@ def listar_misturas_sts():
     conn.close()
 
     return resultado
+
+
+def verificar_estado_da_op(op):
+    conn = conectar()
+    cursor = conn.cursor()
+    
+    sql = """
+        SELECT status_mist
+        FROM misturas
+        WHERE op_numero = %s
+
+    """
+    cursor.execute(sql, (op,))
+    resultado = cursor.fetchall()[0]
+
+
+    cursor.close()
+    conn.close()
+
+    return resultado
+
+    
