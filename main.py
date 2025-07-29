@@ -35,7 +35,7 @@ class App(ctk.CTk):
         self.navigator = NavigationManager(self)
 
         # Carrega primeira tela
-        self.show_conferencia_pmd()
+        self.show_login()
 
 
     #comando criador tela de login
@@ -65,8 +65,9 @@ class App(ctk.CTk):
     def show_seletor_de_op(self, tipo_de_conferencia):
         self.navigator.show_frame(lambda master=self: Seletor_de_Op(master, tipo_de_conferencia, navigate_to_menu_conferencia=self.show_conferencia_pmd, conferir_mistura=self.show_conferir_mistura))
 
-    def show_conferir_mistura(self, op):
-        self.navigator.show_frame(lambda master=self: Conferir_Mistura(master, op, navigate_to_seletor_de_op=self.show_seletor_de_op))
+    #show conferir mistura
+    def show_conferir_mistura(self, op, tipo_de_conferencia):
+        self.navigator.show_frame(lambda master=self: Conferir_Mistura(master, op, navigate_to_seletor_de_op=self.show_seletor_de_op, tipo_de_conferencia=tipo_de_conferencia))
     
 
 

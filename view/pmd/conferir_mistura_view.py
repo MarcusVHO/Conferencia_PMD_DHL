@@ -5,6 +5,7 @@
 
 #------------------ inportações Externas --------------------
 import customtkinter as ctk
+import winsound
 #------------------ inportações Externas --------------------
 
 
@@ -16,13 +17,15 @@ from view.components.screen_components import *
 
 
 class Conferir_Mistura(ctk.CTkFrame):
-    def __init__(self, master, op, navigate_to_seletor_de_op):
+    def __init__(self, master, op, navigate_to_seletor_de_op, tipo_de_conferencia):
 
         #inicializacao primaria
         super().__init__(master)
         self.navigate_to_seletor_de_op=navigate_to_seletor_de_op
-
+        self.master.unbind_all("<Key>")
+    
         #inicializacao de variaveis
+        self.tipo_de_conferencia = tipo_de_conferencia
         self.op = op
         self.confimados = 0
         self.total = 0
@@ -42,7 +45,6 @@ class Conferir_Mistura(ctk.CTkFrame):
 
         #verifica status da op antes de construir
         self.atualizar_dados()
-
 
         #frame que ira conter itens
         self.frame_conteiner = ctk.CTkFrame(
@@ -219,26 +221,78 @@ class Conferir_Mistura(ctk.CTkFrame):
         self.frame_lista_direita.grid(row=0, column=4, rowspan=4, padx=5, pady=20, sticky="ns")
 
         # --------------- Frame Direito ---------------------
+        self.atualizar_dados_tela()
 
+        
+
+
+
+
+    #responsavel por atualizar os dados das variaveis 
     def atualizar_dados(self):
-        self.dados = core.atualizar_dados(self.op, self.confimados)
+        self.dados = core.atualizar_dados(self.op, self.confimados, self.tipo_de_conferencia)
         self.confimados = self.dados["confirmados"]
         self.total = self.dados["total"]
         self.progresso_da_barra = self.dados["confirmados"]/self.dados["total"]
         self.misturas = self.dados["misturas"]
-        self.mistura_atual = self.dados["misturas"][self.confimados]
 
+        if self.confimados < len(self.dados["misturas"]):
+            self.mistura_atual = self.dados["misturas"][self.confimados]
+        else:
+            #conclui conferencia
+            self.mistura_atual = "CONCLUIDO"
+            top_level = ctk.CTkToplevel(self.master)
+            top_level.geometry("980x210")
+            top_level.title("CONCLUIDO")
+            label_concluido = ctk.CTkLabel(top_level, text=f"CONFERENCIA DE OP: {self.op} CONCLUIDA", font=("Arial", 30, "bold"))
+            label_concluido.pack(anchor="center", fill="both", expand=True)
+            top_level.transient(self.master)
+            top_level.grab_set()
+            top_level.focus_set()
+            top_level.attributes("-topmost", True)
+            top_level.bind_all("<Key>",  lambda event: (self.voltar(), top_level.destroy()))
+            top_level.protocol("WM_DELETE_WINDOW", lambda: (self.voltar(), top_level.destroy()))
+
+    #responsavel por atulaizar a tela com os novos dados
     def atualizar_dados_tela(self):
         self.itens_confirmados_tabela_esquerda.configure(text=f" {self.confimados} / {self.total}")
         self.barra_de_progresso.set(self.progresso_da_barra)
+
+        #muda cor da brra 
+        if self.progresso_da_barra <= 0.25:
+            self.barra_de_progresso.configure(progress_color=cor.DHL_COLORS["danger"])
+        elif self.progresso_da_barra <= 0.5:
+            self.barra_de_progresso.configure(progress_color=cor.DHL_COLORS["warning"])
+        elif self.progresso_da_barra <= 0.75:
+            self.barra_de_progresso.configure(progress_color=cor.DHL_COLORS["info"])
+        elif self.progresso_da_barra <= 1:
+            self.barra_de_progresso.configure(progress_color=cor.DHL_COLORS["success"])
+
+
         self.label_confirmar.configure(text=self.mistura_atual)
 
+    #reponsavel por fazer a validacao da conferencia
     def conferir_mistura(self, event=None):
         texto_digitado = self.entry_aconfirmar.get().strip()
-        resposta = core.conferir_mistura(self.op, self.mistura_atual, texto_digitado, self.confimados)
+        self.entry_aconfirmar.delete(0, "end")
+        resposta = core.conferir_mistura(self.op, self.mistura_atual, texto_digitado, self.confimados, self.tipo_de_conferencia, self.frame_lista_direita)
+
+        #reage a resposta do core caso sucesso
         if resposta == True:
             self.atualizar_dados()
             self.atualizar_dados_tela()
+            self.frame_conteiner.configure(fg_color=cor.DHL_COLORS["success"])
+            self.frame_conteiner.after(1000, lambda: self.frame_conteiner.configure(fg_color=cor.DHL_COLORS["primary"]))
+            winsound.MessageBeep(winsound.MB_ICONASTERISK)
+
+        #reage a resposta do core caso sucesso
+        elif resposta == False:
+            self.frame_conteiner.configure(fg_color=cor.DHL_COLORS["danger"])
+            self.frame_conteiner.after(2000, lambda: self.frame_conteiner.configure(fg_color=cor.DHL_COLORS["primary"]))
+            winsound.MessageBeep(winsound.MB_ICONHAND)
+            core.conferir_divergencia(self.op, self.confimados, texto_digitado, self.misturas, self.frame_conteiner)
+
    
+   #autoexplicativo
     def voltar(self, event=None):
-        self.navigate_to_seletor_de_op("mistura_normal")
+        self.navigate_to_seletor_de_op(self.tipo_de_conferencia)

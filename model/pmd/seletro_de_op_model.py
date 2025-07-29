@@ -73,18 +73,43 @@ def listar_misturas_sts():
     return resultado
 
 
-def verificar_estado_da_op(op):
+def verificar_estado_da_op(op, tipo):
     conn = conectar()
     cursor = conn.cursor()
     
-    sql = """
-        SELECT status_mist
-        FROM misturas
-        WHERE op_numero = %s
+    #verifca estado da misuta normal
+    if tipo == "mistura_normal":
+        sql = """
+            SELECT status_mist
+            FROM misturas
+            WHERE op_numero = %s
 
-    """
-    cursor.execute(sql, (op,))
-    resultado = cursor.fetchall()[0]
+        """
+        cursor.execute(sql, (op,))
+        resultado = cursor.fetchall()[0]
+
+    #verifica estado dos fines
+    if tipo == "fines":
+        sql = """
+            SELECT status_fines
+            FROM fines
+            WHERE op_numero = %s
+
+        """
+        cursor.execute(sql, (op,))
+        resultado = cursor.fetchall()[0]
+
+
+    #verifica estado dos sts
+    if tipo == "sts":
+        sql = """
+            SELECT status_sts
+            FROM sts
+            WHERE op_numero = %s
+
+        """
+        cursor.execute(sql, (op,))
+        resultado = cursor.fetchall()[0]
 
 
     cursor.close()

@@ -87,7 +87,7 @@ class botao_indentificador(ctk.CTkFrame):
         
         if status == "pendente":
             return cor.DHL_COLORS["warning"]
-        elif status == "confirmado":
+        elif status == "concluido":
             return cor.DHL_COLORS["success"]
         elif status == "cancelado":
             return cor.DHL_COLORS["danger"]
