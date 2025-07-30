@@ -109,9 +109,11 @@ class Login(ctk.CTkFrame):
         senha_label.grid(row=2, column=0, stick="e")
 
         self.senha_entry = ctk.CTkEntry(
-            self.conteiner_login, 
+            self.conteiner_login,
+            show="*",
             height=40, 
-            placeholder_text="SENHA"
+            placeholder_text="SENHA",
+            
         )
         self.senha_entry.grid(row=2, column=1, sticky="we", padx=20)
         self.senha_entry.bind("<Return>", self.logar)

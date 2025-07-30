@@ -108,6 +108,9 @@ class Rodape():
         self.footer.pack(side="bottom", fill="x")
         self.footer.pack_propagate(False)
 
+
+
+
         #Entry rodapé
         self.entry_OPT = ctk.CTkEntry(
             self.footer,
@@ -125,6 +128,8 @@ class Rodape():
         )
         self.label_OPT.pack(side="right", pady=20)
 
+        iform_criador = ctk.CTkLabel(self.footer, text="   Criador: Marcus Vinícius Hilário de Oliveira \nData: 21/07/2025                                         ", font=("Arial", 10,"bold"))
+        iform_criador.pack(side="right",anchor="center", padx=50)
 
         if voltar == True:
             botao_voltar = ctk.CTkButton(
