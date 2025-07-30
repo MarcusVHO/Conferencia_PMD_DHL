@@ -18,6 +18,7 @@ from view.pmd.inserir_mistura_view import Insert_Mist
 from view.pmd.menu_conferencia_view import Conferencia_Pmd_Menu
 from view.pmd.seletor_de_op_view import Seletor_de_Op
 from view.pmd.conferir_mistura_view import Conferir_Mistura
+from view.pmd.gerenciar_view import Gerenciar
 #------------------ inportações internas --------------------
 
 
@@ -35,7 +36,7 @@ class App(ctk.CTk):
         self.navigator = NavigationManager(self)
 
         # Carrega primeira tela
-        self.show_login()
+        self.show_gerenciar_pmd()
 
 
     #comando criador tela de login
@@ -51,7 +52,7 @@ class App(ctk.CTk):
 
     #comando criador menu PMD
     def show_PMD(self):
-        self.navigator.show_frame(lambda master=self: Pmd(master, navigate_to_home=self.show_home, navigate_to_inserir_misturas=self.show_insert_mist, navigate_to_conferencia_pmd=self.show_conferencia_pmd))
+        self.navigator.show_frame(lambda master=self: Pmd(master, navigate_to_home=self.show_home, navigate_to_inserir_misturas=self.show_insert_mist, navigate_to_conferencia_pmd=self.show_conferencia_pmd, navigate_to_gerenciar=self.show_gerenciar_pmd))
 
     #comando criador tela de inserir misturas do PMD
     def show_insert_mist(self):
@@ -68,6 +69,10 @@ class App(ctk.CTk):
     #show conferir mistura
     def show_conferir_mistura(self, op, tipo_de_conferencia):
         self.navigator.show_frame(lambda master=self: Conferir_Mistura(master, op, navigate_to_seletor_de_op=self.show_seletor_de_op, tipo_de_conferencia=tipo_de_conferencia))
+
+    #tela de gerenciamento pmd
+    def show_gerenciar_pmd(self):
+        self.navigator.show_frame(lambda master=self: Gerenciar(master, navigate_to_home_pmd=self.show_PMD))
     
 
 

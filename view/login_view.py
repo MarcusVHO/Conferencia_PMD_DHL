@@ -142,16 +142,18 @@ class Login(ctk.CTkFrame):
 
     #comunica com core para validar login
     def logar(self, event=None):
-        usuario_digitado = self.usuario_entry.get().strip()
-        senha = self.senha_entry.get().strip()
-        #usuario_digitado = "85197893"
-        #senha = "088727"
+        #usuario_digitado = self.usuario_entry.get().strip()
+        #senha = self.senha_entry.get().strip()
+        usuario_digitado = "85197893"
+        senha = "088727"
 
         resposta, mensagem = controler.validar_login(usuario_digitado, senha)
 
         print(f"Logado como: {mensagem}")
         if resposta == True:
             self.navigate_to_home()
+
+
 
         elif resposta == False:
             alerts.box_alert_universal(self.frame, "erro", "Usuario ou Senha invalidos").pack(pady=20)
