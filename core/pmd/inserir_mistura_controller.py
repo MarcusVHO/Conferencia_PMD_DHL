@@ -175,11 +175,34 @@ def selecionar_arquivo_sts():
                         if re.match(r"^1.*[a-zA-Z]$", m):
                             materiais.append(m)
                             quantidades.append(q)
-            total_sts = len(materiais)
+
+            print(materiais, quantidades)
+
+            lista_de_materiais = []
+
+            #expand lista de acordo com quantidade de caixas
+            for material, quantidade in zip(materiais, quantidades):
+
+                quantidade = float(quantidade.replace("KG", "".replace(",", ".")))
+                peso_caixa = model.obter_peso_caixa(material)
+                peso_caixa = float(peso_caixa)
+
+
+                quntidade_caixas = quantidade/peso_caixa
+
+                lista_de_materiais.extend([material] * int(round(quntidade_caixas)))
+
+            print(lista_de_materiais)
+
+
+            #obtem total de sts
+            total_sts = len(lista_de_materiais)
+
 
             #realiza insercoes no banco
-            print(materiais, quantidades)
-            model.inserir_sts(op, materiais, quantidades, total_sts)
+            model.inserir_sts(op, lista_de_materiais, total_sts)
+
+
 
 
 

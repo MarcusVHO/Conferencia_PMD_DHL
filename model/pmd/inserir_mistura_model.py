@@ -99,7 +99,7 @@ def verificar_existencia_fines(op):
 #------------------------- STS ------------------------------
 
 
-def inserir_sts(op_sts, sts, peso_sts, total_sts):
+def inserir_sts(op_sts, sts, total_sts):
     conn = conectar()
     cursor = conn.cursor()
 
@@ -116,10 +116,10 @@ def inserir_sts(op_sts, sts, peso_sts, total_sts):
     else:
         # Inserção permitida
         insert_sql_mist = """ 
-        INSERT INTO sts (op_numero, json_sts, json_peso_sts, total_sts, status_sts)
-        VALUES (%s, %s, %s, %s, 'pendente')
+        INSERT INTO sts (op_numero, json_sts, total_sts, status_sts)
+        VALUES (%s, %s, %s, 'pendente')
         """
-        cursor.execute(insert_sql_mist, (op_sts, json.dumps(sts), json.dumps(peso_sts), total_sts))
+        cursor.execute(insert_sql_mist, (op_sts, json.dumps(sts), total_sts))
 
 
         conn.commit()
@@ -153,4 +153,17 @@ def listar_sts_pendentes():
     return ultimas_pendentes
 
 
+def obter_peso_caixa(material):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT peso_caixa
+    FROM relacao_sts
+    WHERE codigo = %s
+    """
+    cursor.execute(sql, (material,))
+
+    peso_caixa = cursor.fetchall()[0][0]
+    return peso_caixa
 #------------------------- STS ------------------------------

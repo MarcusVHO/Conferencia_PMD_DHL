@@ -97,10 +97,31 @@ def criar_tabela_sts():
         id INT AUTO_INCREMENT PRIMARY KEY,
         op_numero VARCHAR(50) NOT NULL,
         json_sts JSON NOT NULL,
-        json_peso_sts JSON NOT NULL,
         qtd_confirmada INT DEFAULT 0,
         status_sts VARCHAR(20) DEFAULT 'pendente',
         total_sts INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ 
+    )
+    """)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+
+#cira tabela de relacao do sts
+def criar_tabela_relacao_sts():
+    conn = conectar()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS relacao_sts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        codigo VARCHAR(20) NOT NULL,
+        peso_caixa INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
  
     )
@@ -114,8 +135,8 @@ def criar_tabela_sts():
 
 
 
-
+criar_tabela_usuarios()
+criar_tabela_relacao_sts()
 criar_tabela_sts()
 criar_tabela_fines()
-criar_tabela_usuarios()
 criar_tabela_misturas_normais()

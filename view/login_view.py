@@ -140,10 +140,10 @@ class Login(ctk.CTkFrame):
 
     #comunica com core para validar login
     def logar(self, event=None):
-        #usuario_digitado = self.usuario_entry.get().strip()
-        #senha = self.senha_entry.get().strip()
-        usuario_digitado = "85197893"
-        senha = "088727"
+        usuario_digitado = self.usuario_entry.get().strip()
+        senha = self.senha_entry.get().strip()
+        #usuario_digitado = "85197893"
+        #senha = "088727"
 
         resposta, mensagem = controler.validar_login(usuario_digitado, senha)
 

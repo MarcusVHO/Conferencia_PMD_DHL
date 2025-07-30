@@ -28,6 +28,8 @@ class Seletor_de_Op(ctk.CTkFrame):
         self.tipo_de_conferencia = tipo_de_conferencia
         self.navigate_to_menu_conferencia = navigate_to_menu_conferencia
         self.conferir_mistura = conferir_mistura
+        self.master.unbind_all("<Key>")
+
 
         self.qtd_pendentes = 0
         self.qtd_concluidos = 0

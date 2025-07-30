@@ -17,8 +17,9 @@ import config.colors as cor
 
 class label_confirmados():
     def __init__(self, frame, mistura):
+        self.frame = frame
         self.label = ctk.CTkLabel(
-            frame, 
+            self.frame, 
             height=40,
             text= mistura,
             font=("Arial", 20, "bold"),
@@ -27,14 +28,10 @@ class label_confirmados():
             corner_radius=20
         )
 
-        children = frame.winfo_children()
-        if children:  # Se já existe algum widget no frame
-            if children[0].winfo_manager() == "pack":  # Garante que já foi empacotado
-                self.label.pack(side="top", padx=10, pady=2, fill="x", expand=True, before=children[0])
-            else:
-                self.label.pack(side="top", padx=10, pady=2, fill="x", expand=True)
-        else:
-            self.label.pack(side="top", padx=10, pady=2, fill="x", expand=True)
+        self.label.pack(fill="x", expand=True, padx=10, pady=10)
+        self.frame.after(10, self.rolar)
+    def rolar(self):
+        self.frame._parent_canvas.yview_moveto(1.0)
 
 
 def atualizar_dados(op, cont, type):
