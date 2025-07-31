@@ -42,6 +42,7 @@ APP_IMG_COLETOR = resource_path("assets/coletor.png")
 APP_IMG_CLAMPS = resource_path("assets/clamps.png")
 APP_IMG_CAIXA_C48 = resource_path("assets/caixa_c48.png")
 APP_IMG_ENGRENAGEM = resource_path("assets/engrenagem.png")
+APP_IMG_PRANCHETA = resource_path("assets/prancheta.png")
 
 APP_PDF = diretorio_arquivo_exe() / "PDF"
 

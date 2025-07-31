@@ -79,6 +79,15 @@ def alterar_status(op, tipo, status):
         cursor.execute(sql, valores)
         conn.commit()
 
+        if status == "cancelado":
+            update_confirm = """
+            UPDATE misturas SET qtd_confirmada = 0 WHERE op_numero = %s
+            """
+            cursor.execute(update_confirm, (op,))
+            conn.commit()
+
+
+
     elif tipo == "FINES":
         sql = """
             UPDATE fines SET status_fines = %s WHERE op_numero = %s
@@ -86,6 +95,15 @@ def alterar_status(op, tipo, status):
         valores = (status, op)
         cursor.execute(sql, valores)
         conn.commit()
+
+        if status == "cancelado":
+            update_confirm = """
+            UPDATE fines SET qtd_confirmada = 0 WHERE op_numero = %s
+            """
+            cursor.execute(update_confirm, (op,))
+            conn.commit()
+
+
 
 
     elif tipo == "STS":
@@ -95,6 +113,13 @@ def alterar_status(op, tipo, status):
         valores = (status, op)
         cursor.execute(sql, valores)
         conn.commit()
-    
+
+
+        if status == "cancelado":
+            update_confirm = """
+            UPDATE sts SET qtd_confirmada = 0 WHERE op_numero = %s
+            """
+            cursor.execute(update_confirm, (op,))
+            conn.commit()
 
     cursor.close()

@@ -19,6 +19,7 @@ from view.pmd.menu_conferencia_view import Conferencia_Pmd_Menu
 from view.pmd.seletor_de_op_view import Seletor_de_Op
 from view.pmd.conferir_mistura_view import Conferir_Mistura
 from view.pmd.gerenciar_view import Gerenciar
+from view.relatorio.menu_relatorio_view import Home_Report
 #------------------ inportações internas --------------------
 
 
@@ -36,7 +37,7 @@ class App(ctk.CTk):
         self.navigator = NavigationManager(self)
 
         # Carrega primeira tela
-        self.show_gerenciar_pmd()
+        self.show_login()
 
 
     #comando criador tela de login
@@ -45,7 +46,7 @@ class App(ctk.CTk):
 
     #comando criador tela inicial
     def show_home(self):
-        self.navigator.show_frame(lambda master=self: Home(master, navigate_to_pmd=self.show_PMD))
+        self.navigator.show_frame(lambda master=self: Home(master, navigate_to_pmd=self.show_PMD, navigate_to_login=self.show_login, navigate_to_report=self.show_report))
 
 
 
@@ -73,6 +74,13 @@ class App(ctk.CTk):
     #tela de gerenciamento pmd
     def show_gerenciar_pmd(self):
         self.navigator.show_frame(lambda master=self: Gerenciar(master, navigate_to_home_pmd=self.show_PMD))
+    
+
+
+
+
+    def show_report(self):
+        self.navigator.show_frame(lambda master=self: Home_Report(master, navigate_to_home=self.show_home))
     
 
 

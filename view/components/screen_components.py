@@ -132,7 +132,7 @@ class Rodape():
         iform_criador.pack(side="right",anchor="center", padx=50)
 
         if voltar == True:
-            botao_voltar = ctk.CTkButton(
+            self.botao_voltar = ctk.CTkButton(
                 self.footer,
                 text="VOLTAR",
                 height=50,
@@ -141,7 +141,7 @@ class Rodape():
                 text_color=cor.DHL_COLORS["text_light"],
                 command=command,
             )
-            botao_voltar.pack(side="left", padx=10)
+            self.botao_voltar.pack(side="left", padx=10)
 #----------------------- Rodapé  ----------------------------
 
 
