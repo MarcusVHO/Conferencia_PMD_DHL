@@ -14,13 +14,12 @@ import model.pmd.gerenciar_model as model
 #------------------ inportações internas --------------------
 
 class botao_indentificador(ctk.CTkFrame):
-    def __init__(self,frame, id, op, qtd_confirm, status, total, tipo, comando):
+    def __init__(self,frame, op, qtd_confirm, status, total, tipo, comando):
         super().__init__(frame, fg_color=self.get_cor(status), height=40, width=800)
 
         self.pack_propagate(False)
 
         self.op = op
-        self.id = id
         self.tipo = tipo
         self.status = status
         self.frame = frame
@@ -72,7 +71,7 @@ class botao_indentificador(ctk.CTkFrame):
 
 
     def executar_mudanca_de_satatus(self, values):
-        model.alterar_status(self.op, self.tipo, values, self.id)
+        model.alterar_status(self.op, self.tipo, values)
         self.atualizar()
         print(values)
 
@@ -100,5 +99,5 @@ def mostrar_mistura(tipo, frame, comando):
         print(lista_de_misturas)
 
         for item in lista_de_misturas:
-            botao_indentificador(frame, item[0], item[1], item[2], item[3], item[4], tipo, comando).pack(pady=10)
+            botao_indentificador(frame, item[0], item[1], item[2], item[3], tipo, comando).pack(pady=10)
 

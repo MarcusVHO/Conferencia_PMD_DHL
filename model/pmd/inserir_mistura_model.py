@@ -17,14 +17,14 @@ def inserir_mistura_normal(op, mistura, total, fines, total_fines):
 
     check_sql = """
     SELECT COUNT(*) FROM misturas
-    WHERE op_numero = %s AND status_mist IN ('pendente', 'concluido')
+    WHERE op_numero = %s AND status_mist IN ('pendente', 'concluido', 'cancelado')
     """
     
     cursor.execute(check_sql, (op,))
     existe = cursor.fetchone()[0]
 
     if existe > 0:
-        print(f" Não pode inserir: já existe uma mistura para OP {op} com status pendente ou concluído.")
+        print(f" Não pode inserir: já existe uma mistura para OP {op} com status cancelado, pendente ou concluído.")
     else:
         # Inserção permitida
         insert_sql_mist = """ 
@@ -108,14 +108,14 @@ def inserir_sts(op_sts, sts, total_sts):
 
     check_sql = """
     SELECT COUNT(*) FROM sts
-    WHERE op_numero = %s AND status_sts IN ('pendente', 'concluido')
+    WHERE op_numero = %s AND status_sts IN ('pendente', 'concluido', 'cancelado')
     """
     
     cursor.execute(check_sql, (op_sts,))
     existe = cursor.fetchone()[0]
 
     if existe > 0:
-        print(f" Não pode inserir: já existe um STS para OP {op_sts} com status pendente ou concluído.")
+        print(f" Não pode inserir: já existe um STS para OP {op_sts} com status cancelado, pendente ou concluído.")
     else:
         # Inserção permitida
         insert_sql_mist = """ 

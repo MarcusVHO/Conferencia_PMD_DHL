@@ -24,6 +24,8 @@ def criar_botoes(frame, tipo, conferir_mistura):
     pendente = 0
     cancelado = 0
     concluido = 0
+
+    #executa acao ao clicar no botao
     def ao_clicar(op, status):
             
             print(f"{tipo} de OP: {op} selecionada.")
