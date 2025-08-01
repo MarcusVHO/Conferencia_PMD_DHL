@@ -102,6 +102,11 @@ class Gerenciar(ctk.CTkFrame):
 
 
     def seletor_de_tipo(self, values):
+
+        if values == "NORMAIS":
+            values = "mistura"
+
+        values = values.lower()
         limpar_frame(self.frame_central)
         core.mostrar_mistura(values, self.frame_central, self.atualizar_tela)
         print(values)

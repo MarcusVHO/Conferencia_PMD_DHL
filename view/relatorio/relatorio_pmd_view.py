@@ -119,6 +119,8 @@ class Report_PMD(ctk.CTkFrame):
 
 
     def selecionar(self, values):
+        if values == "Normais":
+            values = "mistura"
         print(values)
         limpar_frame(self.frame_esquerdo)
         limpar_frame(self.frame_direito)

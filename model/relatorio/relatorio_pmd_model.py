@@ -25,9 +25,6 @@ def obter_lista_de_misturas(tipo):
 
     cursor = get_cursor()
 
-    if tipo == "Normais":
-        tipo = "mistura"
-
     sql = f"""
     SELECT DISTINCT op
     FROM relatorio_{tipo.lower()}
@@ -39,6 +36,7 @@ def obter_lista_de_misturas(tipo):
 
     cursor.close()
     conn.close()
+
     return resultado
 
 
@@ -48,9 +46,6 @@ def obter_lancamentos(op, tipo):
 
 
     cursor = get_cursor()
-
-    if tipo == "Normais":
-        tipo = "mistura"
 
     sql = f"""
     SELECT codigo, created_at, nome

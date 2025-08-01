@@ -11,15 +11,22 @@
 from db.database import conectar
 #------------------ inportações Internas --------------------
 
+conn = conectar()
 
-def listar_misturas_normais():
-    conn = conectar()
-    cursor = conn.cursor()
+def get_cursor():
+    global conn
+    if not conn.is_connected():
+        conn.reconnect()  # Garante reconexão se caiu
+    return conn.cursor()
 
-    sql = """
-    SELECT op_numero, qtd_confirmada, status_mist, total_mist
-    FROM misturas
-    ORDER BY FIELD(status_mist, 'pendente', 'cancelado', 'concluido'), created_at DESC
+
+def obter_lista(type):
+    cursor = get_cursor()
+
+    sql = f"""
+    SELECT op, qtd_confirmada, status, total
+    FROM {type}
+    ORDER BY FIELD(status, 'pendente', 'cancelado', 'concluido'), created_at DESC
     LIMIT 30
     """
 
@@ -33,83 +40,19 @@ def listar_misturas_normais():
 
 
 
-def listar_misturas_fines():
-    conn = conectar()
-    cursor = conn.cursor()
-
-    sql = """
-    SELECT op_numero, qtd_confirmada, status_fines, total_fines
-    FROM fines
-    ORDER BY FIELD(status_fines, 'pendente', 'cancelado', 'concluido'), created_at DESC
-    LIMIT 30
-    """
-
-    cursor.execute(sql)
-    resultado = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return resultado
-
-
-def listar_misturas_sts():
-    conn = conectar()
-    cursor = conn.cursor()
-
-    sql = """
-    SELECT op_numero, qtd_confirmada, status_sts, total_sts
-    FROM sts
-    ORDER BY FIELD(status_sts, 'pendente', 'cancelado', 'concluido'), created_at DESC
-    LIMIT 30
-    """
-
-    cursor.execute(sql)
-    resultado = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return resultado
-
-
-def verificar_estado_da_op(op, tipo):
-    conn = conectar()
-    cursor = conn.cursor()
+def verificar_estado_da_op(op, type):
+    cursor = get_cursor()
     
     #verifca estado da misuta normal
-    if tipo == "mistura_normal":
-        sql = """
-            SELECT status_mist
-            FROM misturas
-            WHERE op_numero = %s
+    sql = f"""
+        SELECT status
+        FROM {type}
+        WHERE op = {op}
 
-        """
-        cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()
+    """
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
 
-    #verifica estado dos fines
-    if tipo == "fines":
-        sql = """
-            SELECT status_fines
-            FROM fines
-            WHERE op_numero = %s
-
-        """
-        cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()
-
-
-    #verifica estado dos sts
-    if tipo == "sts":
-        sql = """
-            SELECT status_sts
-            FROM sts
-            WHERE op_numero = %s
-
-        """
-        cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()
 
     cursor.close()
     conn.close()

@@ -22,154 +22,63 @@ def get_cursor():
     return conn.cursor()
 
 
-def listar_mistura(tipo):
+#Obtem lista de misturas que serao mostradas na tela
+def listar_mistura(type):
 
     cursor = get_cursor()
 
-    if tipo == "NORMAIS":
-        sql = """
-            SELECT op_numero, qtd_confirmada, status_mist, total_mist
-            FROM misturas
-            ORDER BY FIELD(status_mist, 'pendente', 'cancelado', 'concluido'), created_at DESC
-            LIMIT 30
+    sql = f"""
+        SELECT op, qtd_confirmada, status, total
+        FROM {type}
+        ORDER BY FIELD(status, 'pendente', 'cancelado', 'concluido'), created_at DESC
+        LIMIT 30
 
+    """
+    cursor.execute(sql)
+    lista = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return lista
+
+
+
+
+#executa funcao de alterar status
+def alterar_status(op, type, status):
+
+
+
+    cursor = get_cursor()
+
+    sql = f"""
+        UPDATE {type} SET status = %s WHERE op = %s
+    """
+    cursor.execute(sql, (status, op))
+    conn.commit()
+
+    if status == "cancelado":
+        cursor = get_cursor()
+
+        update_confirm = f"""
+        UPDATE {type} SET qtd_confirmada = 0 WHERE op = %s
         """
-        cursor.execute(sql)
-        lista = cursor.fetchall()
-        return lista
-    
+        cursor.execute(update_confirm, (op,))
+        conn.commit()
 
-    elif tipo == "FINES":
-        sql = """
-            SELECT op_numero, qtd_confirmada, status_fines, total_fines
-            FROM fines
-            ORDER BY FIELD(status_fines, 'pendente', 'cancelado', 'concluido'), created_at DESC
-            LIMIT 30
+        
+        
 
-        """
-        cursor.execute(sql)
-        lista = cursor.fetchall()
-        return lista
-    
 
-    elif tipo == "STS":
-        sql = """
-            SELECT op_numero, qtd_confirmada, status_sts, total_sts
-            FROM sts
-            ORDER BY FIELD(status_sts, 'pendente', 'cancelado', 'concluido'), created_at DESC
-            LIMIT 30
-
-        """
-        cursor.execute(sql)
-        lista = cursor.fetchall()
-        return lista
+    relatorio = f"""
+        INSERT INTO relatorio_{type} (op, codigo, nome)    
+        VALUES (%s, %s, %s)
+    """
+    cursor.execute(relatorio, (op, f"ALTERADO: {status}", st.USUARIO_LOGADO["nomeusuario"]))
+    conn.commit()
 
     cursor.close()
     conn.close()
 
 
-
-
-
-
-def alterar_status(op, tipo, status):
-
-
-
-    if tipo == "NORMAIS":
-        cursor = get_cursor()
-
-        sql = """
-            UPDATE misturas SET status_mist = %s WHERE op_numero = %s
-        """
-        valores = (status, op)
-        cursor.execute(sql, valores)
-        conn.commit()
-        cursor.close()
-
-        if status == "cancelado":
-            cursor = get_cursor()
-
-            update_confirm = """
-            UPDATE misturas SET qtd_confirmada = 0 WHERE op_numero = %s
-            """
-            cursor.execute(update_confirm, (op,))
-            conn.commit()
-
-            
-            
-
-        cursor = get_cursor()
-
-        relatorio = f"""
-            INSERT INTO relatorio_mistura (op, codigo, nome)    
-            VALUES (%s, %s, %s)
-        """
-        cursor.execute(relatorio, (op, f"ALTERADO: {status}", st.USUARIO_LOGADO["nomeusuario"]))
-        conn.commit()
-        cursor.close()
-
-
-
-    elif tipo == "FINES":
-        cursor = get_cursor()
-
-        sql = """
-            UPDATE fines SET status_fines = %s WHERE op_numero = %s
-        """
-        valores = (status, op)
-        cursor.execute(sql, valores)
-        conn.commit()
-        cursor.close()
-
-        if status == "cancelado":
-            cursor = get_cursor()
-
-            update_confirm = """
-            UPDATE fines SET qtd_confirmada = 0 WHERE op_numero = %s
-            """
-            cursor.execute(update_confirm, (op,))
-            conn.commit()
-
-
-
-        cursor = get_cursor()
-        relatorio = f"""
-            INSERT INTO relatorio_fines (op, codigo, nome)    
-            VALUES (%s, %s, %s)
-        """
-
-        cursor.execute(relatorio, (op, f"ALTERADO: {status}", st.USUARIO_LOGADO["nomeusuario"]))
-        conn.commit()
-        cursor.close()
-
-
-    elif tipo == "STS":
-        cursor = get_cursor()
-        sql = """
-            UPDATE sts SET status_sts = %s WHERE op_numero = %s
-        """
-        valores = (status, op)
-        cursor.execute(sql, valores)
-        conn.commit()
-        cursor.close()
-
-        if status == "cancelado":
-            cursor = get_cursor()
-
-            update_confirm = """
-            UPDATE sts SET qtd_confirmada = 0 WHERE op_numero = %s
-            """
-            cursor.execute(update_confirm, (op,))
-            conn.commit()
-            cursor.close()
-
-        cursor = get_cursor()
-        relatorio = f"""
-            INSERT INTO relatorio_sts (op, codigo, nome)    
-            VALUES (%s, %s, %s)
-        """
-
-        cursor.execute(relatorio, (op, f"ALTERADO: {status}", st.USUARIO_LOGADO["nomeusuario"]))
-        conn.commit()
-        cursor.close()

@@ -40,7 +40,7 @@ class Conferencia_Pmd_Menu(ctk.CTkFrame):
         #-------construcao pincipal------
 
         #botaão PMD
-        self.botao_conferencia = botao(self.frame, self.img_caixa_c48, "   1 - CONFERIR MISTURA NORMAL   ", command= lambda: self.ir_para_seletor_de_op("mistura_normal"))
+        self.botao_conferencia = botao(self.frame, self.img_caixa_c48, "   1 - CONFERIR MISTURA NORMAL   ", command= lambda: self.ir_para_seletor_de_op("mistura"))
         self.botao_conferencia.frame_button.pack(side="left",anchor="n", padx=20, pady=20)
 
 

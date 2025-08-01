@@ -26,147 +26,63 @@ def get_cursor():
 def pegar_dados_uteis(op, type):
     cursor = get_cursor()
 
-    if type == "mistura_normal":
-    
-        sql = """
-            SELECT json_mistura_normal,qtd_confirmada, status_mist, total_mist
-            FROM misturas
-            WHERE op_numero = %s
 
-        """
-        cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()[0]
+    sql = f"""
+        SELECT misturas, qtd_confirmada, status, total
+        FROM {type.lower()}
+        WHERE op = %s
 
-        return resultado
-    
-
-    #Pèga dados dos fines
-    elif type == "fines":
-    
-        sql = """
-            SELECT json_fines,qtd_confirmada, status_fines, total_fines
-            FROM fines
-            WHERE op_numero = %s
-
-        """
-        cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()[0]
-
-        return resultado
-    
-
-    #pega dados dos sts
-    elif type == "sts":
-    
-        sql = """
-            SELECT json_sts, qtd_confirmada, status_sts, total_sts
-            FROM sts
-            WHERE op_numero = %s
-
-        """
-        cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()[0]
-
-        return resultado
-    
+    """
+    cursor.execute(sql, (op,))
+    resultado = cursor.fetchall()[0]
     cursor.close()
+    conn.close()
+    return resultado
+    
 
-
+#Atuliza a quantidade confirmado do item que esta sendo conferido a cada conferencia
 def atualizar_dado(op, confirmados, type):
     cursor = get_cursor()
 
-    if type == "mistura_normal":
-        sql = """
-            UPDATE misturas SET qtd_confirmada = %s WHERE op_numero = %s
-        """
-        valores = (confirmados, op)
-        cursor.execute(sql, valores)
-        conn.commit()
-
-
-    elif type == "fines":
-        sql = """
-            UPDATE fines SET qtd_confirmada = %s WHERE op_numero = %s
-        """
-        valores = (confirmados, op)
-        cursor.execute(sql, valores)
-        conn.commit()
-
-
-    elif type == "sts":
-        sql = """
-            UPDATE sts SET qtd_confirmada = %s WHERE op_numero = %s
-        """
-        valores = (confirmados, op)
-        cursor.execute(sql, valores)
-        conn.commit()
-
+   
+    sql = f"""
+        UPDATE {type} SET qtd_confirmada = %s WHERE op = %s
+    """
+    cursor.execute(sql, (confirmados, op))
+    conn.commit()
     cursor.close()
+    conn.close()
 
 
-#conclui e fecha o model 
+
+
+#conclui o item conferido e insere no relatorio
 def concluir(op, type):
     cursor = get_cursor()
 
-    if type == "mistura_normal":
-        sql = """
-            UPDATE misturas SET status_mist = %s WHERE op_numero = %s
-        """
-        valores = ("concluido", op)
-        cursor.execute(sql, valores)
-        conn.commit()
+    sql = f"""
+        UPDATE {type} SET status = %s WHERE op = %s
+    """
+    valores = ("concluido", op)
+    cursor.execute(sql, valores)
+    conn.commit()
 
-        relatorio = f"""
-            INSERT INTO relatorio_mistura (op, codigo, nome)    
-            VALUES (%s, %s, %s)
-        """
-        cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
-        conn.commit()
-
-
-    elif type == "fines":
-        sql = """
-            UPDATE fines SET status_fines = %s WHERE op_numero = %s
-        """
-        valores = ("concluido", op)
-        cursor.execute(sql, valores)
-        conn.commit()
-
-        relatorio = f"""
-            INSERT INTO relatorio_fines (op, codigo, nome)    
-            VALUES (%s, %s, %s)
-        """
-        cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
-        conn.commit()
-
-
-
-
-    elif type == "sts":
-        sql = """
-            UPDATE sts SET status_sts = %s WHERE op_numero = %s
-        """
-        valores = ("concluido", op)
-        cursor.execute(sql, valores)
-        conn.commit()
-
-        relatorio = f"""
-            INSERT INTO relatorio_sts (op, codigo, nome)    
-            VALUES (%s, %s, %s)
-        """
-        cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
-        conn.commit()
-
-
+    relatorio = f"""
+        INSERT INTO relatorio_{type} (op, codigo, nome)    
+        VALUES (%s, %s, %s)
+    """
+    cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
+    conn.commit()
     cursor.close()
+    conn.close()
 
 
+
+
+#insere cada dado conferido no relatorio
 def inserir_no_relatorio(op, mistura, nome, tipo):
     cursor = get_cursor()
 
-
-    if tipo =="mistura_normal":
-        tipo = "mistura"
 
         
     sql = f"""
@@ -175,19 +91,16 @@ def inserir_no_relatorio(op, mistura, nome, tipo):
     """
 
     cursor.execute(sql, (op, mistura, nome))
-    cursor.close()
     conn.commit()
+    cursor.close()
     conn.close()
 
 
 
-
+#insere o erro no relatorio
 def inserir_erro_no_relatorio(op, dado, tipo):
 
     cursor = get_cursor()
-
-    if tipo == "mistura_normal":
-        tipo = "mistura"
 
     sql = f"""
     INSERT INTO relatorio_{tipo} (op, codigo, nome)
@@ -195,6 +108,6 @@ def inserir_erro_no_relatorio(op, dado, tipo):
     """
     cursor.execute(sql, (op, dado, st.USUARIO_LOGADO["nomeusuario"]))
 
-    cursor.close()
     conn.commit()
+    cursor.close()
     conn.close()

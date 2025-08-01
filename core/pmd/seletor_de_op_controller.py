@@ -40,67 +40,24 @@ def criar_botoes(frame, tipo, conferir_mistura):
 
 
 
-    if tipo == "mistura_normal":
-        lista_misturas = model.listar_misturas_normais()
+    lista_misturas = model.obter_lista(tipo)
 
-        for mistura in lista_misturas:
-            botao = botao_indentificador(frame, mistura[0], mistura[1], mistura[2], mistura[3], 0, ao_clicar)
-
-
-            if mistura[2] == "pendente":
-                pendente +=1
-            if mistura[2] == "concluido":
-                concluido+=1
-            if mistura[2] == "cancelado":
-                cancelado +=1
+    for mistura in lista_misturas:
+        botao = botao_indentificador(frame, mistura[0], mistura[1], mistura[2], mistura[3], 0, ao_clicar)
 
 
-            botao.pack(pady=10)
-            print(mistura)
-
-        return pendente, cancelado, concluido
-
-
-
-
-    elif tipo == "fines":
-        lista_fines = model.listar_misturas_fines()
-
-        for mistura in lista_fines:
-            botao = botao_indentificador(frame, mistura[0], mistura[1], mistura[2], mistura[3], 0, ao_clicar)
-
-            if mistura[2] == "pendente":
-                pendente +=1
-            if mistura[2] == "concluido":
-                concluido+=1
-            if mistura[2] == "cancelado":
-                cancelado +=1
-
-            botao.pack(pady=10)
-            print(mistura)
-
-        return pendente, cancelado, concluido
+        if mistura[2] == "pendente":
+            pendente +=1
+        if mistura[2] == "concluido":
+            concluido+=1
+        if mistura[2] == "cancelado":
+            cancelado +=1
 
 
-    elif tipo == "sts":
-        lista_fines = model.listar_misturas_sts()
+        botao.pack(pady=10)
+        print(mistura)
 
-        for mistura in lista_fines:
-            botao = botao_indentificador(frame, mistura[0], mistura[1], mistura[2], mistura[3], 0, ao_clicar)
-
-
-            if mistura[2] == "pendente":
-                pendente +=1
-            if mistura[2] == "concluido":
-                concluido+=1
-            if mistura[2] == "cancelado":
-                cancelado +=1
-
-
-            botao.pack(pady=10)
-            print(mistura)
-        
-        return pendente, cancelado, concluido
+    return pendente, cancelado, concluido
 
 
 

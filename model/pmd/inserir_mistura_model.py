@@ -16,8 +16,8 @@ def inserir_mistura_normal(op, mistura, total, fines, total_fines):
     cursor = conn.cursor()
 
     check_sql = """
-    SELECT COUNT(*) FROM misturas
-    WHERE op_numero = %s AND status_mist IN ('pendente', 'concluido', 'cancelado')
+    SELECT COUNT(*) FROM mistura
+    WHERE op = %s
     """
     
     cursor.execute(check_sql, (op,))
@@ -28,14 +28,14 @@ def inserir_mistura_normal(op, mistura, total, fines, total_fines):
     else:
         # Inserção permitida
         insert_sql_mist = """ 
-        INSERT INTO misturas (op_numero, json_mistura_normal, total_mist, status_mist)
+        INSERT INTO mistura (op, misturas, total, status)
         VALUES (%s, %s, %s, 'pendente')
         """
         cursor.execute(insert_sql_mist, (op, json.dumps(mistura), total))
 
         if fines:
             insert_sql_fines = """ 
-            INSERT INTO fines (op_numero, json_fines, total_fines, status_fines)
+            INSERT INTO fines (op, misturas, total, status)
             VALUES (%s, %s, %s, 'pendente')
             """
             cursor.execute(insert_sql_fines, (op, json.dumps(fines), total_fines))
@@ -57,9 +57,9 @@ def listar_misturas_normais_pendentes():
     cursor = conn.cursor()
 
     querry = """
-    SELECT op_numero, qtd_confirmada, status_mist, total_mist
-    FROM misturas
-    WHERE status_mist = 'pendente'
+    SELECT op, qtd_confirmada, status, total
+    FROM mistura
+    WHERE status = 'pendente'
     ORDER BY id DESC
     LIMIT 30;
     """
@@ -75,6 +75,7 @@ def listar_misturas_normais_pendentes():
     conn.close()
     return ultimas_pendentes
 
+
 #verifica se mistura tem fines
 def verificar_existencia_fines(op):
     conn = conectar()
@@ -84,7 +85,7 @@ def verificar_existencia_fines(op):
     verificar_fines ="""
     SELECT EXISTS(
         SELECT 1 FROM fines
-        WHERE op_numero = %s
+        WHERE op = %s
     )
     """
 
@@ -108,7 +109,7 @@ def inserir_sts(op_sts, sts, total_sts):
 
     check_sql = """
     SELECT COUNT(*) FROM sts
-    WHERE op_numero = %s AND status_sts IN ('pendente', 'concluido', 'cancelado')
+    WHERE op = %s
     """
     
     cursor.execute(check_sql, (op_sts,))
@@ -119,7 +120,7 @@ def inserir_sts(op_sts, sts, total_sts):
     else:
         # Inserção permitida
         insert_sql_mist = """ 
-        INSERT INTO sts (op_numero, json_sts, total_sts, status_sts)
+        INSERT INTO sts (op, misturas, total, status)
         VALUES (%s, %s, %s, 'pendente')
         """
         cursor.execute(insert_sql_mist, (op_sts, json.dumps(sts), total_sts))
@@ -137,9 +138,9 @@ def listar_sts_pendentes():
     cursor = conn.cursor()
 
     querry = """
-    SELECT op_numero, qtd_confirmada, status_sts, total_sts
+    SELECT op, qtd_confirmada, status, total
     FROM sts
-    WHERE status_sts = 'pendente'
+    WHERE status = 'pendente'
     ORDER BY id DESC
     LIMIT 30;
     """

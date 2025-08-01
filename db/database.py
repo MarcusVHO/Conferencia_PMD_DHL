@@ -10,13 +10,12 @@ import mysql.connector
 #estabelece comunicacao com o banco
 def conectar():
     return mysql.connector.connect(
-        user="usuario", 
-        password="Senha@2025", 
+        user="SAO", 
+        password="08872797", 
         host="148.230.76.128", 
-        database="banco_de_dados"
+        database="SAO"
     )
-
-
+    
 
 #------------------------- Tabelas ----------------------------
 
@@ -39,6 +38,8 @@ def criar_tabela_usuarios():
     cursor.close()
     conn.close()
 
+
+
 #cira tabela de misturas normais
 def criar_tabela_misturas_normais():
     conn = conectar()
@@ -46,13 +47,13 @@ def criar_tabela_misturas_normais():
     cursor = conn.cursor()
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS misturas (
+        CREATE TABLE IF NOT EXISTS mistura (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        op_numero VARCHAR(50) NOT NULL,
-        json_mistura_normal JSON NOT NULL,
+        op VARCHAR(50) NOT NULL,
+        misturas JSON NOT NULL,
         qtd_confirmada INT DEFAULT 0,
-        status_mist VARCHAR(20) DEFAULT 'pendente',
-        total_mist INT NOT NULL,
+        status VARCHAR(20) DEFAULT 'pendente',
+        total INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
     )
@@ -70,11 +71,11 @@ def criar_tabela_fines():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS fines (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        op_numero VARCHAR(50) NOT NULL,
-        json_fines JSON NOT NULL,
+        op VARCHAR(50) NOT NULL,
+        misturas JSON NOT NULL,
         qtd_confirmada INT DEFAULT 0,
-        status_fines VARCHAR(20) DEFAULT 'pendente',
-        total_fines INT NOT NULL,
+        status VARCHAR(20) DEFAULT 'pendente',
+        total INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
  
     )
@@ -95,11 +96,11 @@ def criar_tabela_sts():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS sts (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        op_numero VARCHAR(50) NOT NULL,
-        json_sts JSON NOT NULL,
+        op VARCHAR(50) NOT NULL,
+        misturas JSON NOT NULL,
         qtd_confirmada INT DEFAULT 0,
-        status_sts VARCHAR(20) DEFAULT 'pendente',
-        total_sts INT NOT NULL,
+        status VARCHAR(20) DEFAULT 'pendente',
+        total INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
  
     )

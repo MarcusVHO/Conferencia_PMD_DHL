@@ -290,7 +290,7 @@ class Conferir_Mistura(ctk.CTkFrame):
             self.frame_conteiner.configure(fg_color=cor.DHL_COLORS["danger"])
             self.frame_conteiner.after(2000, lambda: self.frame_conteiner.configure(fg_color=cor.DHL_COLORS["primary"]))
             winsound.MessageBeep(winsound.MB_ICONHAND)
-            core.conferir_divergencia(self.op, self.confimados, texto_digitado, self.misturas, self.frame_conteiner)
+            core.conferir_divergencia(self.op, self.confimados, texto_digitado, self.misturas, self.frame_conteiner, self.tipo_de_conferencia)
 
    
    #autoexplicativo
