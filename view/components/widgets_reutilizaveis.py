@@ -38,7 +38,7 @@ class botao_indentificador(ctk.CTkFrame):
             fg_color="transparent",
             text_color=cor.DHL_COLORS["text_dark"],
             font=("Arial", 20, "bold"),
-            command=lambda: on_click(op) if on_click else None
+            command=lambda: on_click(op, status) if on_click else None
 
         )
         self.botao.pack(side="left", anchor="n", fill="both", expand=True)

@@ -91,7 +91,10 @@ def verificar_existencia_fines(op):
     cursor.execute(verificar_fines, (op,))
 
     result = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
     return result
+    
 
 #------------------ Misturas e Fines ------------------------
 
@@ -165,5 +168,7 @@ def obter_peso_caixa(material):
     cursor.execute(sql, (material,))
 
     peso_caixa = cursor.fetchall()[0][0]
+    cursor.close()
+    conn.close()
     return peso_caixa
 #------------------------- STS ------------------------------

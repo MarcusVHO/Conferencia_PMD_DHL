@@ -19,11 +19,12 @@ from view.components.screen_components import *
 
 #------------------ Classe pincipal --------------------
 class Home_Report(ctk.CTkFrame):
-    def __init__(self, master, navigate_to_home):
+    def __init__(self, master, navigate_to_home, navigate_to_report_pmd):
 
         #inicializacao primaria
         super().__init__(master)
         self.navigate_to_home = navigate_to_home
+        self.navigate_to_report_pmd = navigate_to_report_pmd
 
         #ciracao frame principal
         self.frame = ctk.CTkFrame(self, fg_color=cor.DHL_COLORS["primary"])
@@ -40,7 +41,7 @@ class Home_Report(ctk.CTkFrame):
         #-------construcao pincipal------
 
         #botaão PMD
-        self.botao_pmd = botao(self.frame, self.img_pranchetea, "   1 - PMD   ", None)
+        self.botao_pmd = botao(self.frame, self.img_pranchetea, "   1 - PMD   ", self.navigate_to_report_pmd)
         self.botao_pmd.frame_button.pack(side="left",anchor="n", padx=20, pady=20)
 
         #botaão pedagio

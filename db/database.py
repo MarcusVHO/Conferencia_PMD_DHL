@@ -131,10 +131,85 @@ def criar_tabela_relacao_sts():
     cursor.close()
     conn.close()
 
+
 #------------------------- Tabelas ----------------------------
 
 
+#------------------- Tabelas Relatorios -----------------------
 
+def criar_tabela_relatorio_mistura_normal():
+    conn = conectar()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS relatorio_mistura (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        op VARCHAR(20) NOT NULL,
+        codigo VARCHAR(60) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        nome VARCHAR(50) NOT NULL
+                   
+ 
+    )
+    """)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+
+
+def criar_tabela_relatorio_fiens():
+    conn = conectar()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS relatorio_fines (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        op VARCHAR(20) NOT NULL,
+        codigo VARCHAR(60) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        nome VARCHAR(50) NOT NULL
+                   
+ 
+    )
+    """)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+
+
+def criar_tabela_relatorio_sts():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS relatorio_sts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        op VARCHAR(20) NOT NULL,
+        codigo VARCHAR(60) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        nome VARCHAR(50) NOT NULL
+                   
+ 
+    )
+    """)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+#------------------- Tabelas Relatorios -----------------------
+
+criar_tabela_relatorio_mistura_normal()
+criar_tabela_relatorio_fiens()
+criar_tabela_relatorio_sts()
 criar_tabela_usuarios()
 criar_tabela_relacao_sts()
 criar_tabela_sts()

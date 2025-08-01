@@ -25,7 +25,7 @@ USUARIO_LOGADO = None
 
 #variaveis gerais do sistema
 APP_TITLE = "Sistema de Apoio Operacional"
-APP_SIZE = "1470x730"
+APP_SIZE = "1800x730"
 APP_THEME = "light"
 
 #Caminhos

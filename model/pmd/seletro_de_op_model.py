@@ -86,7 +86,7 @@ def verificar_estado_da_op(op, tipo):
 
         """
         cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()[0]
+        resultado = cursor.fetchall()
 
     #verifica estado dos fines
     if tipo == "fines":
@@ -97,7 +97,7 @@ def verificar_estado_da_op(op, tipo):
 
         """
         cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()[0]
+        resultado = cursor.fetchall()
 
 
     #verifica estado dos sts
@@ -109,8 +109,7 @@ def verificar_estado_da_op(op, tipo):
 
         """
         cursor.execute(sql, (op,))
-        resultado = cursor.fetchall()[0]
-
+        resultado = cursor.fetchall()
 
     cursor.close()
     conn.close()

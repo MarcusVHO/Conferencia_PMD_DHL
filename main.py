@@ -20,6 +20,7 @@ from view.pmd.seletor_de_op_view import Seletor_de_Op
 from view.pmd.conferir_mistura_view import Conferir_Mistura
 from view.pmd.gerenciar_view import Gerenciar
 from view.relatorio.menu_relatorio_view import Home_Report
+from view.relatorio.relatorio_pmd_view import Report_PMD
 #------------------ inportações internas --------------------
 
 
@@ -80,7 +81,10 @@ class App(ctk.CTk):
 
 
     def show_report(self):
-        self.navigator.show_frame(lambda master=self: Home_Report(master, navigate_to_home=self.show_home))
+        self.navigator.show_frame(lambda master=self: Home_Report(master, navigate_to_home=self.show_home, navigate_to_report_pmd=self.show_report_pmd))
+
+    def show_report_pmd(self):
+        self.navigator.show_frame(lambda master=self: Report_PMD(master, navigate_to_report=self.show_report))
     
 
 

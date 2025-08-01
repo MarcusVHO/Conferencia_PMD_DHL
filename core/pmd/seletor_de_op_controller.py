@@ -24,11 +24,10 @@ def criar_botoes(frame, tipo, conferir_mistura):
     pendente = 0
     cancelado = 0
     concluido = 0
-    def ao_clicar(op):
+    def ao_clicar(op, status):
             
             print(f"{tipo} de OP: {op} selecionada.")
-            status = model.verificar_estado_da_op(op, tipo)
-            status = status[0]
+
             print(f"Status da OP: {op} é ",status)
 
             if status == "pendente":
@@ -108,10 +107,10 @@ def entrada_manual(op, type, conferir_mistura):
     if op != "":
         print(f"{type} de OP: {op} selecionada.")
         status = model.verificar_estado_da_op(op, type)
-        status = status[0]
+        status = [item[0] for item in status]
         print(f"Status da OP: {op} é ",status)
 
-        if status == "pendente":
+        if "pendente" in status:
             conferir_mistura(op, type)
         else:
             print("Erro")

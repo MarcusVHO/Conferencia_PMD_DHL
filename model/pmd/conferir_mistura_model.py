@@ -8,6 +8,7 @@
 
 
 #------------------ inportações Internas --------------------
+import config.settings as st
 from db.database import conectar
 #------------------ inportações Internas --------------------
 
@@ -115,6 +116,13 @@ def concluir(op, type):
         cursor.execute(sql, valores)
         conn.commit()
 
+        relatorio = f"""
+            INSERT INTO relatorio_mistura (op, codigo, nome)    
+            VALUES (%s, %s, %s)
+        """
+        cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
+        conn.commit()
+
 
     elif type == "fines":
         sql = """
@@ -123,6 +131,15 @@ def concluir(op, type):
         valores = ("concluido", op)
         cursor.execute(sql, valores)
         conn.commit()
+
+        relatorio = f"""
+            INSERT INTO relatorio_fines (op, codigo, nome)    
+            VALUES (%s, %s, %s)
+        """
+        cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
+        conn.commit()
+
+
 
 
     elif type == "sts":
@@ -133,5 +150,51 @@ def concluir(op, type):
         cursor.execute(sql, valores)
         conn.commit()
 
-        cursor.close()
-        conn.close()
+        relatorio = f"""
+            INSERT INTO relatorio_sts (op, codigo, nome)    
+            VALUES (%s, %s, %s)
+        """
+        cursor.execute(relatorio, (op, f"OP: {op} CONCLUIDA", st.USUARIO_LOGADO["nomeusuario"]))
+        conn.commit()
+
+
+    cursor.close()
+
+
+def inserir_no_relatorio(op, mistura, nome, tipo):
+    cursor = get_cursor()
+
+
+    if tipo =="mistura_normal":
+        tipo = "mistura"
+
+        
+    sql = f"""
+    INSERT INTO relatorio_{tipo} (op, codigo, nome)    
+    VALUES (%s, %s, %s)
+    """
+
+    cursor.execute(sql, (op, mistura, nome))
+    cursor.close()
+    conn.commit()
+    conn.close()
+
+
+
+
+def inserir_erro_no_relatorio(op, dado, tipo):
+
+    cursor = get_cursor()
+
+    if tipo == "mistura_normal":
+        tipo = "mistura"
+
+    sql = f"""
+    INSERT INTO relatorio_{tipo} (op, codigo, nome)
+    VALUES(%s, %s, %s)
+    """
+    cursor.execute(sql, (op, dado, st.USUARIO_LOGADO["nomeusuario"]))
+
+    cursor.close()
+    conn.commit()
+    conn.close()

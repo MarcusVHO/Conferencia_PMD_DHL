@@ -13,6 +13,7 @@ import re
 #------------------ Importacoes Internas ----------------------
 import model.pmd.conferir_mistura_model as model
 import config.colors as cor
+import config.settings as st
 #------------------ Importacoes Internas ----------------------
 
 class label_confirmados():
@@ -29,8 +30,10 @@ class label_confirmados():
         )
 
         self.label.pack(fill="x", expand=True, padx=10, pady=10)
-        self.frame.after(10, self.rolar)
-    def rolar(self):
+        self.frame.after(10, self.scroll_bottom)
+    
+    def scroll_bottom(self):
+        self.frame.update_idletasks()
         self.frame._parent_canvas.yview_moveto(1.0)
 
 
@@ -59,13 +62,14 @@ def conferir_mistura(op, mistura_atual, texto_digitado, confirmados, type, frame
         confirmados += 1
         confirmado_lista = label_confirmados(frame, mistura_atual)
         model.atualizar_dado(op, confirmados, type=type)
+        model.inserir_no_relatorio(op, mistura_atual, st.USUARIO_LOGADO["nomeusuario"], type)
         return True
     
     else:
         return False
     
 #verifica de forma basica motivo do erro
-def conferir_divergencia(op,confirmados, texto_digitado, misturas, frame_conteiner):
+def conferir_divergencia(op,confirmados, texto_digitado, misturas, frame_conteiner, tipo):
     
     parte = misturas[confirmados:]
     resultado = re.search(r"1.*[A-Za-z]$", texto_digitado)
@@ -81,30 +85,30 @@ def conferir_divergencia(op,confirmados, texto_digitado, misturas, frame_contein
 
         if encontrado == True:
             print(f"CODIGO: {texto_digitado} FORA DA ORDEM")
-
+            model.inserir_erro_no_relatorio(op, f"{texto_digitado} FORA DE ORDEM", tipo)
             #cira mensagem de erro na tela
             label_erro = ctk.CTkLabel(
                 frame_conteiner, 
                 height=90, 
-                fg_color=cor.DHL_COLORS["warning"],
-                text=f"   CODIGO: {texto_digitado} FORA DA ORDEM   ", 
+                fg_color=cor.DHL_COLORS["danger"],
+                text=f"   CODIGO: {texto_digitado} FORA DE ORDEM   ",
                 font=("Arial", 30, "bold")
             )
             label_erro.grid(row= 3, column=2)
-            label_erro.after(2000, label_erro.grid_forget)
+            label_erro.after(7000, label_erro.grid_forget)
 
         elif encontrado == False:
             print(f"ITEM {texto_digitado} NÂO ENCONTRADO EM {op}")
-            
+            model.inserir_erro_no_relatorio(op, f"{texto_digitado} NÃO ENCONTRADO", tipo)
             #cira mensagem de erro na tela
             label_erro = ctk.CTkLabel(
                 frame_conteiner, 
                 height=90, 
-                fg_color=cor.DHL_COLORS["warning"],
+                fg_color=cor.DHL_COLORS["danger"],
                 text=f"   ITEM {texto_digitado} NÂO ENCONTRADO EM {op}   ", 
                 font=("Arial", 30, "bold")
             )
             label_erro.grid(row= 3, column=2)
-            label_erro.after(2000, label_erro.grid_forget)
+            label_erro.after(7000, label_erro.grid_forget)
 
     
