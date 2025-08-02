@@ -74,7 +74,7 @@ class Home(ctk.CTkFrame):
         self.navigate_to_login()
 
     def ir_para_relatorio(self, event=None):
-        if st.USUARIO_LOGADO["permissao"] in ["criador", "supervisor", "coredenador", "analista"]:
+        if st.USUARIO_LOGADO["permissao"] in ["criador", "supervisor", "coordenador", "analista"]:
             self.navigate_to_report()
 
         else:

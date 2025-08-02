@@ -73,7 +73,7 @@ class Pmd(ctk.CTkFrame):
         self.navigate_to_conferencia_pmd()
 
     def ir_para_gerenciar_pmd(self, event=None):
-        if st.USUARIO_LOGADO["permissao"] in ["criador", "supervisor", "cordenador", "analista"]:
+        if st.USUARIO_LOGADO["permissao"] in ["criador", "supervisor", "coordenador", "analista"]:
             self.navigate_to_gerenciar()
         else:
             winsound.MessageBeep(winsound.MB_ICONHAND)
